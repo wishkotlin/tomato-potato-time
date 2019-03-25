@@ -5,22 +5,34 @@
     flex-direction: column;
     width: 100vw;
     height: 100vh;
+    background: url(../static/bg.jpg) 50% 50% no-repeat;
+    background-size: cover;
     &>p:nth-child(1){
         font-size: 20px;
         font-weight: bold;
+        z-index: 1;
     }
     .indexlogin{
         margin-right: 3em;
+        z-index: 1;
     }
     .indexsignup{
         margin-left: 3em;
+        z-index: 1;
     }
     .ant-spin-spinning{
         zoom: 5;
         margin: 1vh 0;
+        z-index: 1;
     }
     .ant-btn-primary{
         // margin-top: 10vh;
         width: 10vh;
+    }
+    .kv-vbg{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
     }
 }
