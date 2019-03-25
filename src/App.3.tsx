@@ -5,9 +5,8 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import "./App.scss";
 import Login from "./components/Login";
-import Signup from "./components/Signup";
+import Singup from "./components/Signup";
 import Index from "./components/Index";
-import Succcess from "./components/Success";
 
 // function Main() {
 //   return (
@@ -30,12 +29,11 @@ class App extends React.Component {
     return (
       <Router>
         {/* <Main /> */}
-       
+        <div>
           <Route exact={true} path="/" component={Index} />
           <Route path="/login" component={Login} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/success" component={Succcess} />
-        
+          <Route path="/singup" component={Singup} />
+        </div>
       </Router>
     );
   }

@@ -6,5 +6,15 @@
       "node_modules/**/*.ts",
       "coverage/lcov-report/*.js"
     ]
-  }
+  },
+  "jsx-boolean-value": false,
+  "rules": {
+    "no-console": [
+      false
+    ],
+    "only-arrow-functions": [
+      false
+    ]
+  },
+  "defaultSeverity": "none"
 }

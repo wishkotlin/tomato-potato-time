@@ -1,0 +1,26 @@
+.index{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    &>p:nth-child(1){
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .indexlogin{
+        margin-right: 3em;
+    }
+    .indexsignup{
+        margin-left: 3em;
+    }
+    .ant-spin-spinning{
+        zoom: 5;
+        margin: 1vh 0;
+    }
+    .ant-btn-primary{
+        // margin-top: 10vh;
+        width: 10vh;
+    }
+}
