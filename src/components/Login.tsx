@@ -52,12 +52,13 @@ class NormalLoginForm extends React.Component<any,loginState> {
               password_confirmation: values.rpassword
             })
             console.log("成功")
+            this.props.history.push("/");
           } catch (error) {
             console.log(error)
             alert("登录失败")
             // throw new Error()
           }
-          this.props.history.push("/");
+          
         }
       });
     }

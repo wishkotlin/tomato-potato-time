@@ -1,21 +1,38 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Spin,Button } from 'antd';
 import { withRouter } from "react-router-dom";
+import axios from "../utils/Axios";
 // import "../static/bg.mp4"
 import "./index.scss";
 // import Login from "./Login";
-class Index extends Component<any,any> {
+interface myprops{
+  history:any,
+}
+interface mystate{
+  test:boolean,
+  username:any
+}
+class Index extends React.Component<myprops,mystate> {
 
 
   private video: React.RefObject<HTMLVideoElement>;//视频节点
+  // static getuser: any;
 
   constructor(props:any) {
         super(props);
         this.video = React.createRef();
+        this.state = {
+          test: false,
+          username: ""
+        } as mystate
     }
 
 
-  indexlogin = () => {
+  indexlogout = () => {
+    localStorage.removeItem("x-token")
+    this.setState({
+      username: ""
+    })
     this.props.history.push("/login")
   }
   indexsignup = () => {
@@ -26,14 +43,14 @@ class Index extends Component<any,any> {
     let video = e
     // let play = document.querySelectorAll(".kv-vbg") as NodeListOf<VideoHTMLAttributes>
     if(video){
-      console.log(video.target);
+      // console.log(video.target);
       video.target.play()
     }
     
     // let video = this.refs("video")
     // video.play()
   }
-  goPAGE(){                               
+  goPAGE = () => {                               
     
       if((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) && window.innerWidth <= 500) {
       // window.location.href="移动端url";
@@ -53,18 +70,71 @@ class Index extends Component<any,any> {
 
   componentDidMount(){
     this.goPAGE()
+    console.log(localStorage.getItem("x-token"))
+    if(localStorage.getItem("x-token") === null || ""){
+      this.props.history.push("/login")
+    }else{
+      this.getuser()
+    }
+    
+    
   }
+
+
+  static getDerivedStateFromProps = (nextProps:myprops, prevState:mystate):mystate => {
+    let nextState = {} as mystate
+    console.log("props",nextProps)
+    console.log("state",prevState)
+    nextState.test = true
+    console.log(nextState.test)
+    // console.log(Index.toString())
+    // Index.getuser()
+
+    // let getuser =  async() => {
+    //     try {
+    //     const result:any = await axios.get("me")
+    //     console.log(result)
+    //     nextState.username = result.data.account
+    //     console.log(nextState.username)
+    //   } catch (error) {
+    //     console.log(error,"获取用户失败")
+    //   }
+    //   // return nextState
+    // }
+    // getuser()
+    
+    return nextState
+  }
+  // 
+
+  getuser = async() => {
+    try {
+      const result = await axios.get("me")
+      console.log(result)
+      this.setState({
+        username:result.data.account
+      },()=>{
+        console.log(this.state.username)
+      })
+    } catch (error) {
+      console.log(error,"获取用户失败")
+    }
+    
+  }
+  
+  
+
 
   render() {
     return (
       <div className="index">
-      <p>欢迎使用Hey番茄土豆</p>
+      <p>欢迎使用Hey番茄土豆{ this.state.username }</p>
       <Spin size="large" />
       <div>
-        <Button onClick={this.indexlogin} type="primary" className="indexlogin">登录</Button>
-        <Button onClick={this.indexsignup} type="primary" className="indexsignup">注册</Button>
+        <Button onClick={this.indexlogout} type="primary" className="indexlogin">退出</Button>
+        {/* <Button onClick={this.indexsignup} type="primary" className="indexsignup">注册</Button> */}
       </div>
-      <video ref={this.video} onTouchStart={this.play} onMouseLeave={this.play} muted autoPlay src={"https://apd-vlive.apdcdn.tc.qq.com/vcloud1022.tc.qq.com/1022_926bb4e77b324d29b73eed223a86180e.f0.mp4?vkey=438E01E8578F201B9CAA072A16DE34FA6A8D0F92ED3C4E550D5E53381DDB5934837FCA960E45B05382826E9EC5B12B868466AB921CCAC91081636875F15C89EC3004B64660E540F608338A054D1E287045B19BF17FF20E69&sha=0"} className="kv-vbg" preload="auto"></video>
+      <video ref={this.video} onTouchStart={this.play} onMouseLeave={this.play} muted autoPlay src={"https://raw.githubusercontent.com/liulinboyi/Tomato-potato-time/master/src/static/bg.mp4"} className="kv-vbg" preload="auto"></video>
       
         {/* <Login /> */}
       </div>
