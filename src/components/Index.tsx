@@ -1,5 +1,6 @@
 import React from 'react'
-import { Spin,Button } from 'antd';
+// import { Spin,Button } from 'antd';
+import { Input,Menu, Dropdown, Icon, message, } from "antd"
 import { withRouter } from "react-router-dom";
 import axios from "../utils/Axios";
 // import "../static/bg.mp4"
@@ -12,6 +13,16 @@ interface mystate{
   test:boolean,
   username:any
 }
+// const onClick = ({ key }:any) => {
+//   message.info(`Click on item ${key}`);
+// };
+// const menu = (
+//   <Menu onClick={onClick}>
+//     <Menu.Item key="1">账号</Menu.Item>
+//     <Menu.Item key="2">偏好设置</Menu.Item>
+//     <Menu.Item key="3">退出</Menu.Item>
+//   </Menu>
+// );
 class Index extends React.Component<myprops,mystate> {
 
 
@@ -30,6 +41,7 @@ class Index extends React.Component<myprops,mystate> {
 
   indexlogout = () => {
     localStorage.removeItem("x-token")
+    localStorage.removeItem("userInfo")
     this.setState({
       username: ""
     })
@@ -71,10 +83,19 @@ class Index extends React.Component<myprops,mystate> {
   componentDidMount(){
     this.goPAGE()
     console.log(localStorage.getItem("x-token"))
+    const userInfo = localStorage.getItem('userInfo')
     if(localStorage.getItem("x-token") === null || ""){
       this.props.history.push("/login")
     }else{
-      this.getuser()
+      if(userInfo !== null){
+    console.log("localstorage请求")
+        this.setState({
+          username: JSON.parse(userInfo).data.account//解析json字符串
+        })
+      }else{
+        this.getuser()
+      }
+      // this.getuser()
     }
     
     
@@ -108,9 +129,11 @@ class Index extends React.Component<myprops,mystate> {
   // 
 
   getuser = async() => {
+    console.log("网络请求")
     try {
-      const result = await axios.get("me")
+      const result:any = await axios.get("me")
       console.log(result)
+      localStorage.setItem("userInfo",JSON.stringify(result))//转换json存储
       this.setState({
         username:result.data.account
       },()=>{
@@ -122,21 +145,49 @@ class Index extends React.Component<myprops,mystate> {
     
   }
   
-  
+  onClick = ({ key }:any) => {
+    // message.info(`Click on item ${key}`);
+    console.log(key === '3')
+    if(key === '3'){
+      message.info("退出成功")
+      this.indexlogout()
+    }
+  };
+  menu = (
+    <Menu onClick={this.onClick}>
+      <Menu.Item key="1">账号</Menu.Item>
+      <Menu.Item key="2">偏好设置</Menu.Item>
+      <Menu.Item key="3">退出</Menu.Item>
+    </Menu>
+  );
 
 
   render() {
     return (
       <div className="index">
-      <p>欢迎使用Hey番茄土豆{ this.state.username }</p>
-      <Spin size="large" />
+      <header>
+        <span className="logo">欢迎使用Hey番茄土豆</span>
+              <Dropdown overlay={this.menu}>
+          <a className="ant-dropdown-link" href="/account">
+          { this.state.username || "请登录" } <Icon type="down" />
+          </a>
+        </Dropdown>
+        
+      </header>
+      {/* <p>{ this.state.username }</p> */}
+        <main>
+          <Input allowClear placeholder="待办事项" />
+        </main>
+      
+      {/* <Spin size="large" />
       <div>
         <Button onClick={this.indexlogout} type="primary" className="indexlogin">退出</Button>
-        {/* <Button onClick={this.indexsignup} type="primary" className="indexsignup">注册</Button> */}
+       
       </div>
       <video ref={this.video} onTouchStart={this.play} onMouseLeave={this.play} muted autoPlay src={"https://raw.githubusercontent.com/liulinboyi/Tomato-potato-time/master/src/static/bg.mp4"} className="kv-vbg" preload="auto"></video>
-      
+       */}
         {/* <Login /> */}
+        {/* <Button onClick={this.indexlogout} type="primary" className="indexlogin">退出</Button> */}
       </div>
     )
   }

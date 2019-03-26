@@ -8,7 +8,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Index from "./components/Index";
 import Succcess from "./components/Success";
-
+import Account from "./components/Account";
 // function Main() {
 //   return (
 //     <ul>
@@ -35,6 +35,7 @@ class App extends React.Component {
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route path="/success" component={Succcess} />
+          <Route path="/account" component={Account} />
         
       </Router>
     );
