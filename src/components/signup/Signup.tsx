@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Button, Form, Icon, Input } from "antd";
 import { withRouter } from "react-router-dom";
-import axios from '../utils/Axios';
-import "../App.scss";
+import axios from '../../utils/Axios';
+import "../../App.scss";
 
 interface MyProps {
   form:any,

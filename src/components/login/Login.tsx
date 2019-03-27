@@ -1,10 +1,10 @@
 
 import React, { Component } from "react";
 import { Button, Form, Icon, Input } from "antd";
-import "../App.scss";
+import "../../App.scss";
 // import Login from "./Login"
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import axios from "../utils/Axios"
+import axios from "../../utils/Axios"
 // @withRouter
 
 interface IProps extends RouteComponentProps<any> {

@@ -4,9 +4,9 @@ import * as React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import "./App.scss";
-import Login from "./components/Login";
-import Singup from "./components/Signup";
-import Index from "./components/Index";
+import Login from "./components/login/Login";
+import Singup from "./components/signup/Signup";
+import Index from "./components/home/home";
 
 // function Main() {
 //   return (

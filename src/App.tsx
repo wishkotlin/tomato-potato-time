@@ -4,11 +4,12 @@ import * as React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import "./App.scss";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import Index from "./components/Index";
-import Succcess from "./components/Success";
-import Account from "./components/Account";
+import Login from "./components/login/Login";
+import Signup from "./components/signup/Signup";
+import Index from "./components/home/home";
+import Succcess from "./components/success/Success";
+import Account from "./components/tests/Account";
+import Todos from "./components/todos/Todos";
 // function Main() {
 //   return (
 //     <ul>
@@ -36,7 +37,7 @@ class App extends React.Component {
           <Route path="/signup" component={Signup} />
           <Route path="/success" component={Succcess} />
           <Route path="/account" component={Account} />
-        
+          <Route path="/todos" component={Todos} />
       </Router>
     );
   }

@@ -1,10 +1,12 @@
 import React from 'react'
 // import { Spin,Button } from 'antd';
-import { Input,Menu, Dropdown, Icon, message, } from "antd"
+import { Menu, Dropdown, Icon, message,Layout, } from "antd"
 import { withRouter } from "react-router-dom";
-import axios from "../utils/Axios";
+import axios from "../../utils/Axios";
 // import "../static/bg.mp4"
 import "./index.scss";
+import Todos from "../todos/Todos";
+import Time from "../time/Time";
 // import Login from "./Login";
 interface myprops{
   history:any,
@@ -13,6 +15,10 @@ interface mystate{
   test:boolean,
   username:any
 }
+
+const {
+  Header, Footer, Content,
+} = Layout;
 // const onClick = ({ key }:any) => {
 //   message.info(`Click on item ${key}`);
 // };
@@ -91,6 +97,14 @@ class Index extends React.Component<myprops,mystate> {
     console.log("localstorage请求")
         this.setState({
           username: JSON.parse(userInfo).data.account//解析json字符串
+        },() => {
+          setTimeout(() => {
+            const index = document.querySelector(".opsity")
+          if(index){
+            index.className = index.className.replace( new RegExp( "(\\s|^)" + 'opsity' + "(\\s|$)" )," " );
+          }
+          },500)
+          
         })
       }else{
         this.getuser()
@@ -137,6 +151,12 @@ class Index extends React.Component<myprops,mystate> {
       this.setState({
         username:result.data.account
       },()=>{
+        setTimeout(() => {
+          const index = document.querySelector(".opsity")
+        if(index){
+          index.className = index.className.replace( new RegExp( "(\\s|^)" + 'opsity' + "(\\s|$)" )," " );
+        }
+        },500)
         console.log(this.state.username)
       })
     } catch (error) {
@@ -164,20 +184,35 @@ class Index extends React.Component<myprops,mystate> {
 
   render() {
     return (
-      <div className="index">
-      <header>
-        <span className="logo">欢迎使用Hey番茄土豆</span>
-              <Dropdown overlay={this.menu}>
-          <a className="ant-dropdown-link" href="/account">
-          { this.state.username || "请登录" } <Icon type="down" />
-          </a>
-        </Dropdown>
+      <div className="index opsity">
+      <Layout>
+      <Header>
+
+      <span className="logo">欢迎使用Hey番茄土豆</span>
+              <Dropdown overlay={this.menu} trigger={['click']}>
+                <a className="ant-dropdown-link" href="javascript:;">
+                <span>{ this.state.username || "请登录" } <Icon type="down" /></span>
+                </a>
+              </Dropdown>
+      </Header>
+      <div className="index_main">
+      <Content>
+        <Time />
+      </Content>
+      <Content>
         
-      </header>
+          <Todos />
+        
+      </Content>
+      </div>
+      <Footer>Footer</Footer>
+    </Layout>
+      {/* <header>
+        
+        
+      </header> */}
       {/* <p>{ this.state.username }</p> */}
-        <main>
-          <Input allowClear placeholder="待办事项" />
-        </main>
+        
       
       {/* <Spin size="large" />
       <div>
