@@ -1,19 +1,21 @@
 import React from 'react'
 // import { Spin,Button } from 'antd';
-import { Menu, Dropdown, Icon, message,Layout, } from "antd"
+import { Menu, Dropdown, Icon, message,Layout,Skeleton, } from "antd"
 import { withRouter } from "react-router-dom";
 import axios from "../../utils/Axios";
 // import "../static/bg.mp4"
 import "./index.scss";
 import Todos from "../todos/Todos";
 import Time from "../time/Time";
+import { ownUser,signOut } from "../../utils/learnCloud"
 // import Login from "./Login";
 interface myprops{
   history:any,
 }
 interface mystate{
   test:boolean,
-  username:any
+  username:any,
+  loading: boolean
 }
 
 const {
@@ -40,14 +42,15 @@ class Index extends React.Component<myprops,mystate> {
         this.video = React.createRef();
         this.state = {
           test: false,
-          username: ""
+          username: "",
+          loading: true
         } as mystate
     }
 
 
   indexlogout = () => {
-    localStorage.removeItem("x-token")
-    localStorage.removeItem("userInfo")
+    // localStorage.removeItem("x-token")
+    // localStorage.removeItem("userInfo")
     this.setState({
       username: ""
     })
@@ -88,29 +91,65 @@ class Index extends React.Component<myprops,mystate> {
 
   componentDidMount(){
     this.goPAGE()
-    console.log(localStorage.getItem("x-token"))
-    const userInfo = localStorage.getItem('userInfo')
-    if(localStorage.getItem("x-token") === null || ""){
-      this.props.history.push("/login")
-    }else{
-      if(userInfo !== null){
-    console.log("localstorage请求")
-        this.setState({
-          username: JSON.parse(userInfo).data.account//解析json字符串
-        },() => {
-          setTimeout(() => {
+    // console.log(localStorage.getItem("x-token"))
+    // const userInfo = localStorage.getItem('userInfo')
+    // if(localStorage.getItem("x-token") === null || ""){
+    //   this.props.history.push("/login")
+    // }else{
+    //   if(userInfo !== null){
+    // console.log("localstorage请求")
+    //     this.setState({
+    //       username: JSON.parse(userInfo).data.account//解析json字符串
+    //     },() => {
+    //       setTimeout(() => {
+    //         const index = document.querySelector(".opsity")
+    //       if(index){
+    //         index.className = index.className.replace( new RegExp( "(\\s|^)" + 'opsity' + "(\\s|$)" )," " );
+    //       }
+    //       },500)
+          
+    //     })
+    //   }else{
+    //     this.getuser()
+    //   }
+    //   // this.getuser()
+    // }
+
+
+
+    //判断用户是否登录
+    let tempuser = ownUser();
+    console.log("登录凭证",tempuser);
+    console.log(JSON.stringify(tempuser))
+    this.setState(() => ({
+      username: tempuser.username
+    }),
+      () => {
+        console.log(this.state.username);
+        // if (Object.keys(this.state.user).length !== 0) {
+        //   this.setState({
+        //     isLogin: true
+        //   });
+        // }
+        //延迟视图加载
+         setTimeout(() => {
             const index = document.querySelector(".opsity")
           if(index){
             index.className = index.className.replace( new RegExp( "(\\s|^)" + 'opsity' + "(\\s|$)" )," " );
           }
           },500)
-          
-        })
-      }else{
-        this.getuser()
       }
-      // this.getuser()
+    );
+    if(JSON.stringify(tempuser) === JSON.stringify({})){
+      this.props.history.push("/login")
     }
+    setTimeout(() => {
+      this.setState( () => ({
+        loading: false
+      })
+        );
+    }, 1000);
+
     
     
   }
@@ -170,6 +209,7 @@ class Index extends React.Component<myprops,mystate> {
     console.log(key === '3')
     if(key === '3'){
       message.info("退出成功")
+      signOut()
       this.indexlogout()
     }
   };
@@ -195,15 +235,18 @@ class Index extends React.Component<myprops,mystate> {
                 </a>
               </Dropdown>
       </Header>
+     
       <div className="index_main">
+      <Skeleton loading={this.state.loading}>
       <Content>
         <Time />
       </Content>
+      </Skeleton>
+      <Skeleton loading={this.state.loading}>
       <Content>
-        
-          <Todos />
-        
+        <Todos />
       </Content>
+      </Skeleton>
       </div>
       <Footer>Footer</Footer>
     </Layout>

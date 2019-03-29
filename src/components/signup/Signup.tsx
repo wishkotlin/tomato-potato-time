@@ -1,18 +1,21 @@
 import React, { Component } from 'react'
 import { Button, Form, Icon, Input } from "antd";
 import { withRouter } from "react-router-dom";
-import axios from '../../utils/Axios';
+// import axios from '../../utils/Axios';
 import "../../App.scss";
+import { signUp,ownUser } from "../../utils/learnCloud"
 
 interface MyProps {
   form:any,
-  history:any
+  history:any,
+  onSingup:any
 }
 
 interface MyState {
   account: any,
   password: any,
-  rpassword: any
+  rpassword: any,
+  email: any
 
 }
 
@@ -34,7 +37,8 @@ class NormalLoginForm extends React.Component<MyProps, MyState> {
     this.state = {
       account: "",
       password: "",
-      rpassword: ""
+      rpassword: "",
+      email: ""
     }
   }
   handleSubmit = (e:any) => {
@@ -42,20 +46,28 @@ class NormalLoginForm extends React.Component<MyProps, MyState> {
     console.log(this.props)
     this.props.form.validateFields(async (err:any, values:any) => {
       if (!err) {
-        
-        console.log('Received values of form: ', values);
-        try {
-          await axios.post("sign_up/user",{
-            account: values.account,
-            password: values.password,
-            password_confirmation: values.rpassword
-          })
-          console.log("成功")
-        } catch (error) {
-          console.log(error)
-          alert("注册失败")
-          // throw new Error()
-        }
+        let success = (user:any) => {
+          console.log(user);
+          // this.props.onSingup(user);
+        };
+      let error = (error:any) => {
+          console.log(error.message);
+          alert(error.message);
+        };
+        signUp(values.email, values.account, values.password, success, error);
+        // console.log('Received values of form: ', values);
+        // try {
+        //   await axios.post("sign_up/user",{
+        //     account: values.account,
+        //     password: values.password,
+        //     password_confirmation: values.rpassword
+        //   })
+        //   console.log("成功")
+        // } catch (error) {
+        //   console.log(error)
+        //   alert("注册失败")
+        //   // throw new Error()
+        // }
         this.props.history.push("/");
       }
     });
@@ -101,12 +113,32 @@ class NormalLoginForm extends React.Component<MyProps, MyState> {
     });
   }
 
+  email = (e:any) => {
+    e.persist()
+    // console.log(e);
+    console.log(e.target.value)
+    // this.props.form.setFieldsValue({ account: e.target.value });
+    this.setState({ email: e.target.value },()=>{
+      console.log("修改后的state.rpassword",this.state.email)
+    });
+  }
+
   compareToFirstPassword = (rule:any, value:any, callback:any) => {
     const form = this.props.form;
     if (value && value !== form.getFieldValue('password')) {
       callback('两次密码输入的不同，请重新输入!');
     } else {
       callback();
+    }
+  }
+
+
+  componentDidMount(){
+    let tempuser = ownUser();
+    console.log("登录凭证",tempuser);
+    console.log(JSON.stringify(tempuser))
+    if(JSON.stringify(tempuser) !== JSON.stringify({})){
+      this.props.history.push("/")
     }
   }
 
@@ -121,6 +153,17 @@ class NormalLoginForm extends React.Component<MyProps, MyState> {
             rules: [{ required: true, message: '请输入用户名!' }],
           })(
             <Input onChange={this.account} prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="用户名" />
+          )}
+        </Form.Item>
+        <Form.Item>
+          {getFieldDecorator('email', {
+            rules: [{
+              type: 'email', message: '输入的内容不是邮箱!',
+            }, {
+              required: true, message: '请输入邮箱!',
+            }],
+          })(
+            <Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="邮箱" />
           )}
         </Form.Item>
         <Form.Item>

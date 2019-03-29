@@ -125,6 +125,11 @@
         box-shadow: 0 2px 0 rgba(225,225,225,.2);
         .ant-btn-primary{
             width: 100%;
+            color: #666;
+            background-color: #f4f4f4;
+            border-color: #bbb;
+            box-shadow: none;
+            text-shadow: none;
         /*
         margin-top: 10vh;
         width: 10vh;
@@ -175,6 +180,22 @@
                 text-align: justify;
                 opacity: .5;
                 text-decoration: line-through;
+            }
+            .CleanIcon{
+                float: right;
+                padding-top: 20px;
+                cursor: pointer;
+            }
+            .ant-collapse-borderless{
+                width: 95%;
+            }
+            .noselect {/*文本不能选中*/
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
             }
             /*
             .ant-collapse > .ant-collapse-item > .ant-collapse-header{
