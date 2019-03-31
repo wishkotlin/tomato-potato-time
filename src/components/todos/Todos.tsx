@@ -219,10 +219,10 @@ private checkbox: React.RefObject<any>
     <Icon type="check-circle" />
     <p>没有记录</p>
   </div>) : ( this.state.Todolist.map((item:any,key:any) => {
-   return <Checkbox ref={this.checkbox} key={key} checked={item.checked} onChange={(e) => {this.Change(e,key)}}>{ item.value }</Checkbox>
+   return <span key={key}><Checkbox ref={this.checkbox}  checked={item.checked} onChange={(e) => {this.Change(e,key)}} /><span>{ item.value }</span></span>
   }))
   const complate = Complete.length === 0 ? null : ( this.state.Complete.map((item:any,key:any) => {
-    return <Checkbox key={key} checked={item.checked} onChange={(e) => {this.Changecom(e,key)}}>{ item.value }</Checkbox>
+    return <span key={key}><Checkbox checked={item.checked} onChange={(e) => {this.Changecom(e,key)}} /><span>{ item.value }</span></span>
    }))
    const Panel = Collapse.Panel;
    const CleanSvg = () => (

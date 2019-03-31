@@ -140,6 +140,51 @@
             }
         
         }
+        .clock-circle{
+            >p{
+                /*
+                
+                margin: 0;
+                border-top: 1px solid #ddd;
+                padding: 5px 0;
+                
+                float: left;
+                width: 100%;
+                */
+            }
+        }
+        .Tomato:nth-of-type(1){
+            >p{
+                border-top: 1px solid #ddd;
+                padding: 5px 0;
+                margin: 10px 0 0 0;
+                // border-bottom: 1px solid #ddd;
+                word-break: break-all;
+                vertical-align: middle;
+                text-align: justify;
+            }
+        }
+        .Tomato{
+            >p{
+                border-top: 1px solid #ddd;
+                padding: 5px 0;
+                margin: 0px 0 0 0;
+                word-break: break-all;
+                vertical-align: middle;
+                text-align: justify;
+            }
+        }
+        .Tomato:nth-last-of-type(1){
+            >p{
+                border-top: 1px solid #ddd;
+                padding: 5px 0;
+                margin: 0px 0 0 0;
+                border-bottom: 1px solid #ddd;
+                word-break: break-all;
+                vertical-align: middle;
+                text-align: justify;
+            }
+        }
     }
     /*todo*/
     .todo{
@@ -163,6 +208,18 @@
                 vertical-align: middle;
                 text-align: justify;
             }
+            >span{
+                display: flex;
+                border-top: 1px solid #ddd;
+                padding: 5px 0;
+            }
+            >span:nth-of-type(1){
+                margin-top: 10px;
+            }
+            >span>span{
+                flex: 1 1;
+                // width: 100%;
+            }
         }
         .complate{
             display: flex;
@@ -173,6 +230,18 @@
             .ant-collapse-content-box{
             display: flex;
             flex-direction: column;
+                >span{
+                    display: flex;
+                    border-top: 1px solid #ddd;
+                    padding: 5px 0;
+                }
+                >span:nth-of-type(1){
+                    margin-top: 10px;
+                }
+                >span>span{
+                    flex: 1 1;
+                    // width: 100%;
+                }
             }
             .ant-checkbox-wrapper-checked{
                 word-break: break-all;

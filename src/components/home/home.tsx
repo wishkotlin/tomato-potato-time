@@ -18,8 +18,11 @@ interface mystate{
   loading: boolean
 }
 
+// const {
+//   Header, Footer, Content,
+// } = Layout;
 const {
-  Header, Footer, Content,
+  Header, Content,
 } = Layout;
 // const onClick = ({ key }:any) => {
 //   message.info(`Click on item ${key}`);
@@ -248,7 +251,7 @@ class Index extends React.Component<myprops,mystate> {
       </Content>
       </Skeleton>
       </div>
-      <Footer>Footer</Footer>
+      {/* <Footer>Footer</Footer> */}
     </Layout>
       {/* <header>
         

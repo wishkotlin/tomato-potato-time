@@ -29,6 +29,7 @@ class NormalLoginForm extends React.Component<any,loginState> {
 
     constructor(props: any){
       super(props)
+      console.log(props)
       this.state = {
         account: "",
         password: "",
