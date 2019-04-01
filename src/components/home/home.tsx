@@ -39,7 +39,7 @@ class Index extends React.Component<myprops,mystate> {
 
   private video: React.RefObject<HTMLVideoElement>;//视频节点
   // static getuser: any;
-
+  showOpcity: any = null//存储 timeout 在 willumount 清除
   constructor(props:any) {
         super(props);
         this.video = React.createRef();
@@ -135,7 +135,7 @@ class Index extends React.Component<myprops,mystate> {
         //   });
         // }
         //延迟视图加载
-         setTimeout(() => {
+         this.showOpcity = setTimeout(() => {
             const index = document.querySelector(".opsity")
           if(index){
             index.className = index.className.replace( new RegExp( "(\\s|^)" + 'opsity' + "(\\s|$)" )," " );
@@ -146,7 +146,7 @@ class Index extends React.Component<myprops,mystate> {
     if(JSON.stringify(tempuser) === JSON.stringify({})){
       this.props.history.push("/login")
     }
-    setTimeout(() => {
+    this.showOpcity = setTimeout(() => {
       this.setState( () => ({
         loading: false
       })
@@ -193,7 +193,7 @@ class Index extends React.Component<myprops,mystate> {
       this.setState({
         username:result.data.account
       },()=>{
-        setTimeout(() => {
+        this.showOpcity = setTimeout(() => {
           const index = document.querySelector(".opsity")
         if(index){
           index.className = index.className.replace( new RegExp( "(\\s|^)" + 'opsity' + "(\\s|$)" )," " );
@@ -223,6 +223,15 @@ class Index extends React.Component<myprops,mystate> {
       <Menu.Item key="3">退出</Menu.Item>
     </Menu>
   );
+
+
+  componentWillUnmount(){
+    // if(this.state.cutDownTime < 0){
+      // localStorage.removeItem("Time")
+      console.log("componentWillUnmount 定时器已经销毁")
+      clearTimeout(this.showOpcity)
+    // }
+}
 
 
   render() {

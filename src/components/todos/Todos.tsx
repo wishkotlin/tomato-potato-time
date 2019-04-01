@@ -43,7 +43,8 @@ private checkbox: React.RefObject<any>
       this.setState({ 
         // description: value,
         HasTodoList: true,
-        Todolist: tempenter
+        Todolist: tempenter,
+        description: ""
        },() => {
           this.todoinput.current.input.value = ""
           console.log(this.state.Todolist)
@@ -69,7 +70,8 @@ private checkbox: React.RefObject<any>
         this.setState({ 
           // description: value,
           HasTodoList: true,
-          Todolist: tempenter
+          Todolist: tempenter,
+          description: ""
         },() => {
             this.todoinput.current.input.value = ""
             console.log(this.state.Todolist)
@@ -149,14 +151,16 @@ private checkbox: React.RefObject<any>
     console.log("activekey",this.state.activeKey)
     if(this.state.activeKey[0] === ""){
         this.setState( () => ({
-        activeKey: ["1"]
+        activeKey: ["1"],
+        description: this.state.description
       }),() => {
         console.log(this.state.activeKey)
         localStorage.setItem("activeKey",JSON.stringify(this.state.activeKey))
       } )
     }else{
       this.setState( () => ({
-        activeKey: [""]
+        activeKey: [""],
+        description: this.state.description
       }),() => {
         console.log(this.state.activeKey)
         localStorage.setItem("activeKey",JSON.stringify(this.state.activeKey))

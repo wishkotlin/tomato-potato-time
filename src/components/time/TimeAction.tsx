@@ -91,6 +91,17 @@ export class TimeAction extends Component<myprops,mysatte> {
 
 
 
+
+   componentWillUnmount(){
+      if(this.state.cutDownTime < 0){
+        // localStorage.removeItem("Time")
+        console.log("componentWillUnmount 定时器已经销毁")
+        clearInterval(this.tick)
+      }
+  }
+
+
+
   render() {
     let countDown = this.state.cutDownTime 
     const min = Math.floor(countDown/1000/60)

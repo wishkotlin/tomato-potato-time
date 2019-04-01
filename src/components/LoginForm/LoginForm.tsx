@@ -44,9 +44,12 @@ class NormalLoginForm extends React.Component<any,loginState> {
       console.log(this.props)
       this.props.form.validateFields((err:any, values:any) => {
         if (!err) {
+           message.loading('登陆中..', 0)//登陆中
           let success = (user:any) => {
             console.log(user);
             this.props.history.push("/");
+            // message.loading('登陆中..', 0)
+            message.destroy()
             message.success('登录成功');
             // this.props.onSingin(user); //传值
           };
@@ -57,6 +60,10 @@ class NormalLoginForm extends React.Component<any,loginState> {
               message.error("登录失败次数超过限制，请稍候再试，或者通过忘记密码重设密码");
             }
             console.log(error.code);
+            if(error.code === -1){
+              message.destroy()
+              message.error('登陆失败，请检查网络后，稍后重试')
+            }
             console.log(error.message);
           };
           console.log('Received values of form: ', values);
