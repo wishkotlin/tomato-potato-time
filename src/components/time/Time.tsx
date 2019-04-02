@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Button,Icon,Input } from 'antd';
+import { Button,Icon,Input,Popconfirm } from 'antd';
 // import { connect } from "react-redux";
 // import { actionUpdateTime } from "../../redux/actions";
 import TimeAction from "./TimeAction";
 import TimeRest from "./TimeReast";
+import { TodoModel,ownUser } from "../../utils/learnCloud"
 
 interface myprops{
   // actionUpdateTime:any,
@@ -41,13 +42,13 @@ class Time extends Component< myprops,mystate > {
       startTime: null,
       UpdataTime: "",
       // duration: 1500000,//时间间隔
-      duration: 1500000,//时间间隔
-      cutDownTime: 1500000,
+      duration: 10000,//时间间隔
+      cutDownTime: 10000,
       TimeNow: "",
       Tomoto: []
     }
     this.tick = null
-    console.log("Time组件",this.props)
+    // console.log("Time组件",this.props)
   }
 
 
@@ -58,7 +59,7 @@ class Time extends Component< myprops,mystate > {
       // description: "",
       startTime: tempcreateTime,
       UpdataTime: "",
-      cutDownTime: 1500000
+      cutDownTime: 10000
     } ,() => {
       // this.props.actionUpdateTime(this.state.cutDownTime)
       // console.info("this.props.UpdateTime.UpdataTime",this.props.UpdateTime.UpdateTime[0])
@@ -83,18 +84,32 @@ class Time extends Component< myprops,mystate > {
       let temp = this.state.description
       let tempTomoto = this.state.Tomoto
       temp.push(e.target.value)
-      tempTomoto.push(e.target.value)
-      this.setState({
-        description: temp,
-        Tomoto: tempTomoto
-      },() => {
-        e.target.value = ""
-        console.log("description",this.state.description)
-        console.log("Tomoto",this.state.Tomoto)
-    localStorage.setItem("Time",JSON.stringify(this.state))
-    localStorage.setItem("Tomato",JSON.stringify(this.state.Tomoto))
-
+      let value:any = {
+        value: e.target.value,
+        del: false
+      }
+      TodoModel.createTomato(value,(res:any) => {
+        value = {
+          id: res,
+          value: e.target.value,
+          del: false
+        }
+        tempTomoto.push(value)
+        this.setState({
+          description: temp,
+          Tomoto: tempTomoto
+        },() => {
+          e.target.value = ""
+          // console.log("description",this.state.description)
+          // console.log("Tomoto",this.state.Tomoto)
+      localStorage.setItem("Time",JSON.stringify(this.state))
+      localStorage.setItem("Tomato",JSON.stringify(this.state.Tomoto))
+      localStorage.removeItem("cutDownTime")
+        })
+      },(error:any) => {
+        console.log(error)
       })
+      
     }
   }
 
@@ -119,10 +134,42 @@ class Time extends Component< myprops,mystate > {
 
   componentDidMount(){
     let Tomato = localStorage.getItem("Tomato")
+    let cutDownTime = localStorage.getItem("cutDownTime")
+    let Time = localStorage.getItem("Time")
     if(Tomato !== null){
       Tomato = JSON.parse(Tomato)
       this.setState({
         Tomoto: Tomato
+      })
+    }else{
+      let user = ownUser()
+      TodoModel.getByUserTomato(user,(res:any) => {
+        this.setState({
+          Tomoto: res
+        },() => {
+          localStorage.setItem("Tomato",JSON.stringify(this.state.Tomoto))
+        })
+      },(error:any) => {
+        console.log(error)
+      })
+    }
+    if(cutDownTime !== null){
+      let tempcutDownTime = JSON.parse(cutDownTime)
+      let startTime = tempcutDownTime.startTime
+      cutDownTime = tempcutDownTime.cutDownTime
+      this.setState({
+        cutDownTime: cutDownTime,
+        startTime: startTime
+      },() => {
+        // console.log("从localstorage获取的",this.state.cutDownTime)
+      })
+    }
+    if(Time !== null){
+    let tempTime = JSON.parse(Time).description
+    let tempstarttime = JSON.parse(Time).startTime
+      this.setState({
+        description: tempTime,
+        startTime: tempstarttime
       })
     }
   }
@@ -150,11 +197,11 @@ class Time extends Component< myprops,mystate > {
 
   //子组件传值函数
   TimeAction(value:any){
-    console.log("TimeAction",value)
+    // console.log("TimeAction",value)
     this.setState( (preProps,state) => ({
       TimeNow: value
     }),() => {
-      console.log("子组件传值后的",this.state.TimeNow)
+      // console.log("子组件传值后的",this.state.TimeNow)
     } )
   }
 
@@ -167,26 +214,34 @@ class Time extends Component< myprops,mystate > {
   }
 
 
+  CancelTimeAction = () => {
+    this.setState({
+      startTime: null
+    })
+  }
+
+
   
   render() {
     // let TimeNow = new Date().getTime()
     let TimeNow = new Date().getTime()
-    console.log(TimeNow,this.state.startTime,TimeNow - this.state.startTime)
+    // console.log(TimeNow,this.state.startTime,TimeNow - this.state.startTime)
     let Tomato =  this.state.Tomoto.length === 0 ? (<div className="clock-circle"><Icon type="clock-circle" />
     <p>没有记录</p></div>) : (this.state.Tomoto.map( (item:any,key:any) => {
-      return <span key={key} className="Tomato"><p >{ item }</p></span>
+      return <div key={key} className="Tomato"><p >{ item.value }</p></div>
     } ))
-    console.log("Tomato render",this.state.Tomoto.length)
+    // console.log("Tomato render",this.state.Tomoto.length)
     let TimeResult
     if(this.state.startTime !== null){
       if(TimeNow - this.state.startTime > this.state.duration){
         TimeResult =  this.state.description.length === 0 ? (
-        <div><Input onKeyDown={ this.Timeonkey } 
+        <div className="TimeInput"><Input onKeyDown={ this.Timeonkey } 
         // value={ this.state.description } 
         // onChange={ this.TimeChange } 
-        placeholder="完成了什么" />
+        placeholder="番茄时间结束了，您完成了什么工作呢？" />
+            <Popconfirm onConfirm={ () => {this.CancelTimeAction();localStorage.removeItem("cutDownTime");localStorage.removeItem("Time")}  } title="您要放弃这个番茄吗？" okText="确定" cancelText="取消"><span className="TimeActioncancel">×</span></Popconfirm>
             { Tomato }
-        </div>) : (<span><TimeRest Rstart={ (value:any) => this.Rstart(value) } />
+        </div>) : (<span><TimeRest CancelTimeAction = { this.CancelTimeAction } Rstart={ (value:any) => this.Rstart(value) } />
         { Tomato }
         </span>)
       }else{
@@ -196,6 +251,7 @@ class Time extends Component< myprops,mystate > {
           cutDownTime={ this.state.cutDownTime }
           startTime={ this.state.startTime }
           duration={ this.state.duration }
+          CancelTimeAction={ this.CancelTimeAction }
           />
           
           { Tomato }

@@ -1,7 +1,7 @@
 import { show,hide,UpdateTime,ADD_TOMATO,UPDATE_TOMATO,INIT_TOMATOES } from "./actionTypes"
 
 export const actionshow = (payload:any) => {
-    console.log(payload)
+    // console.log(payload)
     return {
         type: show,
         payload: payload,

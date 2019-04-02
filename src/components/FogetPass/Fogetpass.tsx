@@ -15,7 +15,7 @@ import { actionshow,actionhide } from "../../redux/actions";
         visible: false,
         confirmLoading: false,
       }
-      console.log("Fogetpass 的 props",this.props)
+      // console.log("Fogetpass 的 props",this.props)
     }
 
 
@@ -91,7 +91,7 @@ import { actionshow,actionhide } from "../../redux/actions";
     }
 
     componentDidMount(){
-      console.log(this.props.showModal)
+      // console.log(this.props.showModal)
       // this.setState(  () => () )
 
     //   let temppass = this.props.actionshow().showtop
@@ -104,7 +104,7 @@ import { actionshow,actionhide } from "../../redux/actions";
     
     componentWillReceiveProps(nextProps:any){
       // console.log(nextProps)
-      console.log(this.props)
+      // console.log(this.props)
       // let tempvisible = this.props.actionshow(true).payload
       // this.setState( () => ({
       //   visible: tempvisible
@@ -123,7 +123,7 @@ import { actionshow,actionhide } from "../../redux/actions";
       
       
       let visible = this.props.statePass.isshow
-      console.log("传值",this.props.showModal,"非传值",visible)
+      // console.log("传值",this.props.showModal,"非传值",visible)
       return (
 
          <Modal

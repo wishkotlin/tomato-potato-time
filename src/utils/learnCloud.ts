@@ -34,7 +34,7 @@ export function signUp(email:any, username:any, password:any, successFn:any, err
 
 export function ownUser() {
   let user = AV.User.current();
-  console.log(user);
+  // console.log(user);
   if (user) {
     return getUserFromAVUser(user);
   } else {
@@ -67,7 +67,7 @@ export function signIn(username:any, password:any, successFn:any, errorFn:any) {
 }
 
 export const TodoModel = {
-  getByUser(user:any, successFn:any, errorFn:any) {
+  getByUserTodo(user:any, successFn:any, errorFn:any) {
     // 文档见 https://leancloud.cn/docs/leanstorage_guide-js.html#批量操作
     let query = new AV.Query("Todo");
     query.find().then(
@@ -83,12 +83,29 @@ export const TodoModel = {
     );
   },
 
-  create({ status, title, deleted }:any, successFn:any, errorFn:any) {
+
+  getByUserTomato(user:any, successFn:any, errorFn:any) {
+    // 文档见 https://leancloud.cn/docs/leanstorage_guide-js.html#批量操作
+    let query = new AV.Query("Tomato");
+    query.find().then(
+      response => {
+        let array = response.map((t:any) => {
+          return { id: t.id, ...t.attributes };
+        });
+        successFn.call(null, array);
+      },
+      error => {
+        errorFn && errorFn.call(null, error);
+      }
+    );
+  },
+
+  create({ value,checked }:any, successFn:any, errorFn:any) {
     let Todo = AV.Object.extend("Todo"); 
     let todo = new Todo();
-    todo.set("title", title);
-    todo.set("status", status);
-    todo.set("deleted", deleted);
+    todo.set("value", value);
+    todo.set("checked", checked);
+    // todo.set("deleted", deleted);
 
     let acl = new AV.ACL()
     acl.setPublicReadAccess(false) // 注意这里是 false
@@ -108,13 +125,68 @@ export const TodoModel = {
       }
     );
   },
+
+
+  createTomato({ value,del }:any, successFn:any, errorFn:any) {
+    let Todo = AV.Object.extend("Tomato"); 
+    let todo = new Todo();
+    todo.set("value", value);
+    todo.set("del", del);
+    // todo.set("deleted", deleted);
+
+    let acl = new AV.ACL()
+    acl.setPublicReadAccess(false) // 注意这里是 false
+    acl.setWriteAccess(AV.User.current(), true)
+    acl.setReadAccess(AV.User.current(), true)
+    // acl.setWriteAccess(AV.User.current(), true)
+    todo.setACL(acl);
+
+
+    todo.save().then(
+      function(response:any) {
+        console.log("存储成功后返回的id",response.id)
+        successFn.call(null, response.id);
+      },
+      function(error:any) {
+        errorFn && errorFn.call(null, error);
+      }
+    );
+  },
+
+
+  createComplate({ value,checked }:any, successFn:any, errorFn:any) {
+    let Todo = AV.Object.extend("Complate"); 
+    let todo = new Todo();
+    todo.set("value", value);
+    todo.set("checked", checked);
+    // todo.set("deleted", deleted);
+
+    let acl = new AV.ACL()
+    acl.setPublicReadAccess(false) // 注意这里是 false
+    acl.setWriteAccess(AV.User.current(), true)
+    acl.setReadAccess(AV.User.current(), true)
+    // acl.setWriteAccess(AV.User.current(), true)
+    todo.setACL(acl);
+
+
+    todo.save().then(
+      function(response:any) {
+        console.log("存储成功后返回的id",response.id)
+        successFn.call(null, response.id);
+      },
+      function(error:any) {
+        errorFn && errorFn.call(null, error);
+      }
+    );
+  },
+
   // update() {},
-  update({id, title, status, deleted}:any, successFn:any, errorFn:any){
+  update({id, value, checked}:any, successFn:any, errorFn:any){
     // 文档 https://leancloud.cn/docs/leanstorage_guide-js.html#更新对象
     let todo = AV.Object.createWithoutData('Todo', id)
-    title !== undefined && todo.set('title', title)
-    status !== undefined && todo.set('status', status)
-    deleted !== undefined && todo.set('deleted', deleted)
+    value !== undefined && todo.set('value', value)
+    checked !== undefined && todo.set('checked', checked)
+    // deleted !== undefined && todo.set('deleted', deleted)
     // 为什么我要像上面那样写代码？
     // 考虑如下场景
     // update({id:1, title:'hi'})

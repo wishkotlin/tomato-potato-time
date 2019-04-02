@@ -1,5 +1,6 @@
 import React from 'react'
 import { Input, Icon,Checkbox,Collapse,Tooltip } from 'antd';
+import { TodoModel,ownUser } from "../../utils/learnCloud"
 interface myprops{
 
 }
@@ -8,7 +9,8 @@ interface mystate{
     HasTodoList: boolean,
     Todolist:any,
     Complete:any,
-    activeKey: any
+    activeKey: any,
+    AllTodo:any
 }
 class Todos extends React.Component<myprops,mystate> {
 
@@ -24,7 +26,8 @@ private checkbox: React.RefObject<any>
       HasTodoList: false,
       Todolist: [],
       Complete:[],
-      activeKey: [""]
+      activeKey: [""],
+      AllTodo: {}//将 Todolist 与 Complete 合并
     };
   }
 
@@ -33,12 +36,18 @@ private checkbox: React.RefObject<any>
     let value = this.todoinput.current.input.value
     if(value !== ""){
         console.log(value)
-        let newvalue = {
+        let newvalue:any = {
           value: value,
           checked: false
         }
-      this.todoinput.current.focus()
+        TodoModel.create(newvalue,(ObjId:any) => {
+          console.log("创建成功")
       let tempenter = this.state.Todolist
+      newvalue = {//成功后返回ObjId
+        id: ObjId,
+        value: value,
+        checked: false
+      }
       tempenter.push(newvalue)
       this.setState({ 
         // description: value,
@@ -50,6 +59,17 @@ private checkbox: React.RefObject<any>
           console.log(this.state.Todolist)
           localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
       });
+        },(error:any) => {
+          console.log(error);
+        })
+      this.todoinput.current.focus()
+      
+      // let AllTodo = {
+      //   Todolist: JSON.stringify(tempenter),
+      //   Complete: JSON.stringify(this.state.Complete)
+      // }
+      
+      
     }
     
   }
@@ -60,23 +80,46 @@ private checkbox: React.RefObject<any>
     if(value !== ""){
       if(e.keyCode === 13){
             console.log(value)
-            let newvalue = {
+            let newvalue:any = {
               value: value,
               checked: false
             }
+
+            TodoModel.create(newvalue,(ObjId:any) => {
+              console.log("创建成功")
+          let tempenter = this.state.Todolist
+          newvalue = {//成功后返回ObjId
+            id: ObjId,
+            value: value,
+            checked: false
+          }
+          tempenter.push(newvalue)
+          this.setState({ 
+            // description: value,
+            HasTodoList: true,
+            Todolist: tempenter,
+            description: ""
+           },() => {
+              this.todoinput.current.input.value = ""
+              console.log(this.state.Todolist)
+              localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
+          });
+            },(error:any) => {
+              console.log(error);
+            })
         this.todoinput.current.focus()
-        let tempenter = this.state.Todolist
-        tempenter.push(newvalue)
-        this.setState({ 
-          // description: value,
-          HasTodoList: true,
-          Todolist: tempenter,
-          description: ""
-        },() => {
-            this.todoinput.current.input.value = ""
-            console.log(this.state.Todolist)
-            localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
-        });
+        // let tempenter = this.state.Todolist
+        // tempenter.push(newvalue)
+        // this.setState({ 
+        //   // description: value,
+        //   HasTodoList: true,
+        //   Todolist: tempenter,
+        //   description: ""
+        // },() => {
+        //     this.todoinput.current.input.value = ""
+        //     console.log(this.state.Todolist)
+        //     localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
+        // });
       }
       
     }
@@ -95,23 +138,50 @@ private checkbox: React.RefObject<any>
     let check = this.checkbox.current
     console.log(check)
     console.log(key)
-    let tempchange = this.state.Todolist
+    let tempchange = this.state.Todolist.filter( (item:any) => item.checked === false )
     let tempcom = this.state.Complete
     tempchange[key].checked = !tempchange[key].checked
-    tempcom.push(tempchange[key])//已完成数组添加到已完成
-    tempchange.splice(key,1)//删除已完成数组元素
-    this.setState({
-      Todolist: tempchange,
-      description: this.todoinput.current.input.value,
-      Complete: tempcom
-    },() => {
-      console.log("之后",this.state.description)
-      console.log(this.state.Todolist)
-      console.log(this.state.Complete)
-      localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
-      localStorage.setItem("Complete",JSON.stringify(this.state.Complete))
-    })
-    if( this.state.Todolist.length === 0 ){
+    // tempcom.push(tempchange[key])//已完成数组添加到已完成
+    // tempchange.splice(key,1)//删除已完成数组元素
+    // tempchange[key].checked = !tempchange[key].checked
+    let id = tempchange[key].id//获取 id
+    // tempchange.push(tempcom[key])//已完成数组添加到已完成
+    let tempkey = tempcom.findIndex( (item:any) => item.id === id )//根据id 找出索引值
+    console.log("console.log(tempkey)",tempkey)
+    tempcom.splice(tempkey,1)//先删除 根据索引值 删除
+    tempcom.push(tempchange[key])//再将新的 修改了 checked 值的元素 push 
+    TodoModel.update(
+      tempchange[key],
+      () => {//修改成功
+        // this.setState(this.state);
+        // this.setState(
+        //   {
+        //     todoList: tempselect
+        //   },
+        //   () => {
+        //     console.log(this.state.todoList);
+        //   }
+        // );
+        this.setState({
+          Todolist: tempcom,
+          description: this.todoinput.current.input.value,
+          Complete: tempcom
+        },() => {
+          console.log("之后",this.state.description)
+          console.log(this.state.Todolist)
+          console.log(this.state.Complete)
+          localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
+          localStorage.setItem("Complete",JSON.stringify(this.state.Complete))
+        })
+      },
+      (error:any) => {//修改失败
+        console.log("修改错误",error);
+       
+      }
+    );
+    // filter( (item:any) => item.checked === true )//过滤 未选中
+   
+    if( this.state.Todolist.filter( (item:any) => item.checked === false ).length === 0 ){
       this.setState( () => ({
         HasTodoList: false
       }) ,() => {
@@ -122,23 +192,47 @@ private checkbox: React.RefObject<any>
 
   Changecom = (e:any,key:any) => {
     console.log(key)
-    let tempchange = this.state.Todolist
+    let tempchange = this.state.Complete.filter( (item:any) => item.checked === true )
     let tempcom = this.state.Complete
-    tempcom[key].checked = !tempcom[key].checked
-    tempchange.push(tempcom[key])//已完成数组添加到已完成
-    tempcom.splice(key,1)//删除已完成数组元素
-    this.setState( () => ({
-      Todolist: tempchange,
-      description: this.todoinput.current.input.value,
-      Complete: tempcom
-    }),() => {
-      console.log(this.state.Todolist)
-      console.log(this.state.Complete)
-      localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
-      localStorage.setItem("Complete",JSON.stringify(this.state.Complete))
-    } )
-    console.log(this.state.Todolist.length)
-    if( this.state.Todolist.length !== 0 ){
+    tempchange[key].checked = !tempchange[key].checked
+    let id = tempchange[key].id//获取 id
+    // tempchange.push(tempcom[key])//已完成数组添加到已完成
+    let tempkey = tempcom.findIndex( (item:any) => item.id === id )//根据id 找出索引值
+    console.log("console.log(tempkey)",tempkey)
+    tempcom.splice(tempkey,1)//先删除 根据索引值 删除
+    tempcom.push(tempchange[key])//再将新的 修改了 checked 值的元素 push 
+    TodoModel.update(
+      tempchange[key],
+      () => {//修改成功
+        // this.setState(this.state);
+        // this.setState(
+        //   {
+        //     todoList: tempselect
+        //   },
+        //   () => {
+        //     console.log(this.state.todoList);
+        //   }
+        // );
+        this.setState( () => ({
+          Todolist: tempcom,
+          description: this.todoinput.current.input.value,
+          Complete: tempcom
+        }),() => {
+          console.log(this.state.Todolist)
+          console.log(this.state.Complete)
+          localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
+          localStorage.setItem("Complete",JSON.stringify(this.state.Complete))
+        } )
+
+      },
+      (error:any) => {//修改失败
+        console.log("修改错误",error);
+       
+      }
+    );
+    
+    // console.log(this.state.Todolist.length)
+    if( this.state.Todolist.filter( (item:any) => item.checked === false ).length !== 0 ){
       this.setState( () => ({
         HasTodoList: true
       }) ,() => {
@@ -148,13 +242,13 @@ private checkbox: React.RefObject<any>
   }
 
   collapase = (e:any) => {
-    console.log("activekey",this.state.activeKey)
+    // console.log("activekey",this.state.activeKey)
     if(this.state.activeKey[0] === ""){
         this.setState( () => ({
         activeKey: ["1"],
         description: this.state.description
       }),() => {
-        console.log(this.state.activeKey)
+        // console.log(this.state.activeKey)
         localStorage.setItem("activeKey",JSON.stringify(this.state.activeKey))
       } )
     }else{
@@ -162,7 +256,7 @@ private checkbox: React.RefObject<any>
         activeKey: [""],
         description: this.state.description
       }),() => {
-        console.log(this.state.activeKey)
+        // console.log(this.state.activeKey)
         localStorage.setItem("activeKey",JSON.stringify(this.state.activeKey))
       } )
     }
@@ -171,27 +265,42 @@ private checkbox: React.RefObject<any>
 
 
   componentDidMount(){
-    let tempTodolist = localStorage.getItem("Todolist")
+    let user = ownUser();
+    let tempTodolist:any = localStorage.getItem("Todolist")
     if(tempTodolist !== null){
       tempTodolist = JSON.parse(tempTodolist)
-      console.log("非null tempTodolist",tempTodolist)
-      if(tempTodolist !== null && tempTodolist.length === 0){
+      // console.log("非null tempTodolist",tempTodolist)
+      if(tempTodolist !== null && tempTodolist.filter( (item:any) => item.checked === false ).length === 0){
         this.setState( () => ({
           HasTodoList: false,
           Todolist: tempTodolist
         }),() => {
-          console.log("没有TodoList",this.state.HasTodoList)
+          // console.log("没有TodoList",this.state.HasTodoList)
         } )
       }else{
         this.setState( () => ({
           HasTodoList: true,
           Todolist: tempTodolist
         }),() => {
-          console.log("有TodoList",this.state.HasTodoList)
+          // console.log("有TodoList",this.state.HasTodoList)
         } )
       }
         
      
+    }else{
+      TodoModel.getByUserTodo(user,(res:any) => {
+        let tempTodoList = JSON.parse(JSON.stringify(this.state))//深拷贝
+        tempTodoList.Todolist = res
+        tempTodoList.Complete = res
+        tempTodoList.HasTodoList = true
+        this.setState(tempTodoList,() => {
+          console.log("getByUserTodo",this.state)
+          localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
+          localStorage.setItem("Complete",JSON.stringify(this.state.Complete))
+        })
+      },(error:any) => {
+        console.log(error)
+      })
     }
     let tempcom = localStorage.getItem("Complete")
       if(tempcom !== null){
@@ -209,7 +318,7 @@ private checkbox: React.RefObject<any>
       this.setState( () => ({
         activeKey: tempactiveKey
       }),() =>{
-        console.log(this.state.activeKey)
+        // console.log(this.state.activeKey)
       } )
     }
   }
@@ -222,10 +331,10 @@ private checkbox: React.RefObject<any>
     const Todo = HasTodoList === false ? (<div className="check-circle">
     <Icon type="check-circle" />
     <p>没有记录</p>
-  </div>) : ( this.state.Todolist.map((item:any,key:any) => {
+  </div>) : ( this.state.Todolist.filter( (item:any) => item.checked === false ).map((item:any,key:any) => {
    return <span key={key}><Checkbox ref={this.checkbox}  checked={item.checked} onChange={(e) => {this.Change(e,key)}} /><span>{ item.value }</span></span>
   }))
-  const complate = Complete.length === 0 ? null : ( this.state.Complete.map((item:any,key:any) => {
+  const complate = Complete.filter( (item:any) => item.checked === true ).length === 0 ? null : ( this.state.Complete.filter( (item:any) => item.checked === true ).map((item:any,key:any) => {
     return <span key={key}><Checkbox checked={item.checked} onChange={(e) => {this.Changecom(e,key)}} /><span>{ item.value }</span></span>
    }))
    const Panel = Collapse.Panel;
@@ -260,7 +369,7 @@ private checkbox: React.RefObject<any>
         <div className="complate">
           {/* { this.state.Complete.length === 0 ? null : <Tooltip placement="top" title={"收起最近的完成的任务"}><Button></Button></Tooltip>} */}
           
-          { this.state.Complete.length === 0 ? null : (<div><Tooltip placement="topRight" title="清理最近完成的任务列表" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow><CleanIcon className="CleanIcon" /></Tooltip>
+          { this.state.Complete.filter( (item:any) => item.checked === true ).length === 0 ? null : (<div><Tooltip placement="topRight" title="清理最近完成的任务列表" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow><CleanIcon className="CleanIcon" /></Tooltip>
           <Collapse onChange={this.collapase} bordered={false} defaultActiveKey={this.state.activeKey} activeKey={this.state.activeKey}>
           <Panel className="noselect" header="最近完成的任务" key="1">
           { complate }

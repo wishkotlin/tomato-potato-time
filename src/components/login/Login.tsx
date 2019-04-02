@@ -33,7 +33,7 @@ class Login extends Component<IProps> {
       this.state = {
         visible: false
       }
-      console.log("Login 的 props",this.props)
+      // console.log("Login 的 props",this.props)
   }
   render() {
     return (

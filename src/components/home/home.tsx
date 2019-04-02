@@ -118,17 +118,31 @@ class Index extends React.Component<myprops,mystate> {
     //   // this.getuser()
     // }
 
-
+    //打印 控制台
+    let Logo = `                                                                                                                                                      
+                                                                                                                                                      
+    :.     ::                     2r7sJjqbKdB  :7:LBQiriBBsiv:      PBu      .1vv7v7v7v7vL1                                        
+   UBB     BB:                    5BB.SBL QBi  PBRBBBRBRBBBQBq      MB1      :BQZDZgDgZDZQB.                                       
+   7BB     BB.   .5X7  .Lr    vi.BKBB2QBRXBBPQ   Sgi.   iI     r2sLiBBMrYs2r   YLU55X5S1vL                                         
+   7BBKggZbBB.  BBUrBB: BBr  BB1   :PBbBUQEr.. dBBBQBB BBBBBB  BBBBBBBBBBBBB   BB.::::.:BB                                         
+   rBBMBBQQBB  BBBiiRBB :BB .BB  BBBB:YB7.RBBBr  BB XB QB  BB       qBv        BB.ir7r:.BB                                         
+   7BB     BB. BBR....:  ZBrBB   .BBirPBqriBB    Bd XB QB  BB       KBv        UBBKqqIMBBU                                         
+   1BB     BB:  BBgs2B    BBBv    BBi:PB5:iBB   BB  BB QBviBB  ..   QBP  ...    1BK   QB:                                          
+   .rr     7r    :UP5r    LBB     BBKKBBBXqBB  EBJbBBB BBBZBB BBBBBBBBBBBBBBgZBBBBBBBBBBBBBQ                                       
+                       .QQBB      uY... ...JL   i .r:  :r  .:                 .     .    ...                                       
+                       .Mgr                                                                                                        
+`
+    console.log(Logo)
 
     //判断用户是否登录
     let tempuser = ownUser();
-    console.log("登录凭证",tempuser);
-    console.log(JSON.stringify(tempuser))
+    // console.log("登录凭证",tempuser);
+    // console.log(JSON.stringify(tempuser))
     this.setState(() => ({
       username: tempuser.username
     }),
       () => {
-        console.log(this.state.username);
+        // console.log(this.state.username);
         // if (Object.keys(this.state.user).length !== 0) {
         //   this.setState({
         //     isLogin: true
@@ -160,10 +174,10 @@ class Index extends React.Component<myprops,mystate> {
 
   static getDerivedStateFromProps = (nextProps:myprops, prevState:mystate):mystate => {
     let nextState = {} as mystate
-    console.log("props",nextProps)
-    console.log("state",prevState)
+    // console.log("props",nextProps)
+    // console.log("state",prevState)
     nextState.test = true
-    console.log(nextState.test)
+    // console.log(nextState.test)
     // console.log(Index.toString())
     // Index.getuser()
 
@@ -209,7 +223,7 @@ class Index extends React.Component<myprops,mystate> {
   
   onClick = ({ key }:any) => {
     // message.info(`Click on item ${key}`);
-    console.log(key === '3')
+    // console.log(key === '3')
     if(key === '3'){
       message.info("退出成功")
       signOut()
@@ -228,7 +242,7 @@ class Index extends React.Component<myprops,mystate> {
   componentWillUnmount(){
     // if(this.state.cutDownTime < 0){
       // localStorage.removeItem("Time")
-      console.log("componentWillUnmount 定时器已经销毁")
+      console.log("定时器已经销毁")
       clearTimeout(this.showOpcity)
     // }
 }

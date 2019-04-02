@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Form, Icon, Input } from "antd";
+import { Button, Form, Icon, Input,message } from "antd";
 import { withRouter } from "react-router-dom";
 // import axios from '../../utils/Axios';
 import "../../App.scss";
@@ -46,13 +46,26 @@ class NormalLoginForm extends React.Component<MyProps, MyState> {
     console.log(this.props)
     this.props.form.validateFields(async (err:any, values:any) => {
       if (!err) {
+        message.loading('注册中..', 0)//注册中
         let success = (user:any) => {
           console.log(user);
+          message.destroy()
+          message.success('注册成功');
           // this.props.onSingup(user);
+          this.props.history.push("/");//注册成功后 跳转到 首页
         };
       let error = (error:any) => {
+         console.log(error.code)
+        if(error.code === 203){
+          message.destroy()
+          message.error('注册失败，此电子邮箱已经被占用')
+        }else{
+          message.destroy()
+          // alert(error.message);
+          message.error('注册失败，请检查网络后，稍后重试')
+        }
           console.log(error.message);
-          alert(error.message);
+          
         };
         signUp(values.email, values.account, values.password, success, error);
         // console.log('Received values of form: ', values);
@@ -68,7 +81,7 @@ class NormalLoginForm extends React.Component<MyProps, MyState> {
         //   alert("注册失败")
         //   // throw new Error()
         // }
-        this.props.history.push("/");
+        // this.props.history.push("/");
       }
     });
   }
@@ -86,20 +99,20 @@ class NormalLoginForm extends React.Component<MyProps, MyState> {
   account = (e:any) => {
     e.persist()
     // console.log(e);
-    console.log(e.target.value)
+    // console.log(e.target.value)
     // this.props.form.setFieldsValue({ account: e.target.value });
     this.setState({ account: e.target.value },()=>{
-      console.log("修改后的state.account",this.state.account)
+      // console.log("修改后的state.account",this.state.account)
     });
   }
 
   password = (e:any) =>{
     e.persist()
     // console.log(e);
-    console.log(e.target.value)
+    // console.log(e.target.value)
     // this.props.form.setFieldsValue({ account: e.target.value });
     this.setState({ password: e.target.value },()=>{
-      console.log("修改后的state.password",this.state.password)
+      // console.log("修改后的state.password",this.state.password)
     });
   }
 
@@ -135,8 +148,8 @@ class NormalLoginForm extends React.Component<MyProps, MyState> {
 
   componentDidMount(){
     let tempuser = ownUser();
-    console.log("登录凭证",tempuser);
-    console.log(JSON.stringify(tempuser))
+    // console.log("登录凭证",tempuser);
+    // console.log(JSON.stringify(tempuser))
     if(JSON.stringify(tempuser) !== JSON.stringify({})){
       this.props.history.push("/")
     }

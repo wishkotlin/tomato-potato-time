@@ -29,24 +29,24 @@ class NormalLoginForm extends React.Component<any,loginState> {
 
     constructor(props: any){
       super(props)
-      console.log(props)
+      // console.log(props)
       this.state = {
         account: "",
         password: "",
         visible: false,
         confirmLoading: false,
       }
-      console.log("LoginForm 的 props",this.props)
+      // console.log("LoginForm 的 props",this.props)
     }
 
     handleSubmit = (e:any) => {
       e.preventDefault();
-      console.log(this.props)
+      // console.log(this.props)
       this.props.form.validateFields((err:any, values:any) => {
         if (!err) {
            message.loading('登陆中..', 0)//登陆中
           let success = (user:any) => {
-            console.log(user);
+            // console.log(user);
             this.props.history.push("/");
             // message.loading('登陆中..', 0)
             message.destroy()
@@ -66,7 +66,7 @@ class NormalLoginForm extends React.Component<any,loginState> {
             }
             console.log(error.message);
           };
-          console.log('Received values of form: ', values);
+          // console.log('Received values of form: ', values);
           signIn(values.account, values.password, success, error);
           // try {
           //   await axios.post("sign_in/user",{
@@ -95,20 +95,20 @@ class NormalLoginForm extends React.Component<any,loginState> {
     account = (e:any) => {
       e.persist()
       // console.log(e);
-      console.log(e.target.value)
+      // console.log(e.target.value)
       // this.props.form.setFieldsValue({ account: e.target.value });
       this.setState({ account: e.target.value },()=>{
-        console.log("修改后的state.account",this.state.account)
+        // console.log("修改后的state.account",this.state.account)
       });
     }
 
     password = (e:any) =>{
       e.persist()
       // console.log(e);
-      console.log(e.target.value)
+      // console.log(e.target.value)
       // this.props.form.setFieldsValue({ account: e.target.value });
       this.setState({ password: e.target.value },()=>{
-        console.log("修改后的state.password",this.state.password)
+        // console.log("修改后的state.password",this.state.password)
       });
     }
 
@@ -140,7 +140,7 @@ class NormalLoginForm extends React.Component<any,loginState> {
       },() => {
         // let is =  this.props.statelogin
         this.props.actionshow()//调用 actions里面的 函数 修改 loginredux 里面的 state
-        console.log("tempis",this.props)
+        // console.log("tempis",this.props)
       });
       // console.log(this.props)
       
@@ -191,8 +191,8 @@ class NormalLoginForm extends React.Component<any,loginState> {
 
     componentDidMount(){
       let tempuser = ownUser();
-      console.log("登录凭证",tempuser);
-      console.log(JSON.stringify(tempuser))
+      // console.log("登录凭证",tempuser);
+      // console.log(JSON.stringify(tempuser))
       if(JSON.stringify(tempuser) !== JSON.stringify({})){
         this.props.history.push("/")
       }
