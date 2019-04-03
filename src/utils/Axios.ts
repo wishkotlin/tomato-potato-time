@@ -1,7 +1,7 @@
 import axios from "axios";
 // import { createBrowserHistory } from 'history';
-const appid = "";
-const appsecrect = "";
+const appid = "q5HRLsW98Fem9zhjBkQnurVR";
+const appsecrect = "Yg2AF3XwqcnoQ1LPnV8gD27n";
 
 const instance = axios.create({
   baseURL: "https://gp-server.hunger-valley.com/",

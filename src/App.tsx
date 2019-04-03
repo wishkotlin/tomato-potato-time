@@ -34,12 +34,12 @@ class App extends React.Component {
         <Switch>
           {/* <Main /> */}
         
-            <Route exact={true} path="/" component={Index} />
-            <Route path="/login" component={Login} />
-            <Route path="/signup" component={Signup} />
-            <Route path="/success" component={Succcess} />
-            <Route path="/account" component={Account} />
-            <Route path="/todos" component={Todos} />
+            <Route exact={true} path="/Tomato-potato-time" component={Index} />
+            <Route path="/Tomato-potato-time/login" component={Login} />
+            <Route path="/Tomato-potato-time/signup" component={Signup} />
+            <Route path="/Tomato-potato-time/success" component={Succcess} />
+            <Route path="/Tomato-potato-time/account" component={Account} />
+            <Route path="/Tomato-potato-time/todos" component={Todos} />
             <Route component={NoMatch} />
         </Switch>
       </Router>
