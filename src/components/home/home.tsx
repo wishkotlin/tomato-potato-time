@@ -57,10 +57,10 @@ class Index extends React.Component<myprops,mystate> {
     this.setState({
       username: ""
     })
-    this.props.history.push("/login")
+    this.props.history.push("/Tomato-potato-time/login")
   }
   indexsignup = () => {
-    this.props.history.push("/signup")
+    this.props.history.push("/Tomato-potato-time/signup")
   }
   play = (e:any) => {
     // let video = document.querySelectorAll(".kv-vbg")
@@ -158,7 +158,7 @@ class Index extends React.Component<myprops,mystate> {
       }
     );
     if(JSON.stringify(tempuser) === JSON.stringify({})){
-      this.props.history.push("/login")
+      this.props.history.push("/Tomato-potato-time/login")
     }
     this.showOpcity = setTimeout(() => {
       this.setState( () => ({

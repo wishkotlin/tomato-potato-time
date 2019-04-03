@@ -47,7 +47,7 @@ class NormalLoginForm extends React.Component<any,loginState> {
            message.loading('登陆中..', 0)//登陆中
           let success = (user:any) => {
             // console.log(user);
-            this.props.history.push("/");
+            this.props.history.push("/Tomato-potato-time");
             // message.loading('登陆中..', 0)
             message.destroy()
             message.success('登录成功');
@@ -89,7 +89,7 @@ class NormalLoginForm extends React.Component<any,loginState> {
 
     signup = (e:any) =>{
         e.preventDefault();
-        this.props.history.push("/signup");
+        this.props.history.push("/Tomato-potato-time/signup");
     }
 
     account = (e:any) => {
@@ -194,7 +194,7 @@ class NormalLoginForm extends React.Component<any,loginState> {
       // console.log("登录凭证",tempuser);
       // console.log(JSON.stringify(tempuser))
       if(JSON.stringify(tempuser) !== JSON.stringify({})){
-        this.props.history.push("/")
+        this.props.history.push("/Tomato-potato-time")
       }
     }
 

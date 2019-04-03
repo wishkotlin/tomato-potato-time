@@ -52,7 +52,7 @@ class NormalLoginForm extends React.Component<MyProps, MyState> {
           message.destroy()
           message.success('注册成功');
           // this.props.onSingup(user);
-          this.props.history.push("/");//注册成功后 跳转到 首页
+          this.props.history.push("/Tomato-potato-time");//注册成功后 跳转到 首页
         };
       let error = (error:any) => {
          console.log(error.code)
@@ -89,7 +89,7 @@ class NormalLoginForm extends React.Component<MyProps, MyState> {
 
   signup = (e:any) =>{
       e.preventDefault();
-      this.props.history.push("/login");
+      this.props.history.push("/Tomato-potato-time/login");
   }
 
   // onChangeUserName = (e:any) => {
@@ -151,7 +151,7 @@ class NormalLoginForm extends React.Component<MyProps, MyState> {
     // console.log("登录凭证",tempuser);
     // console.log(JSON.stringify(tempuser))
     if(JSON.stringify(tempuser) !== JSON.stringify({})){
-      this.props.history.push("/")
+      this.props.history.push("/Tomato-potato-time")
     }
   }
 
