@@ -16,7 +16,7 @@ export class TimeReast extends Component< myprops,mystate > {
         super(props)
         this.state = {
             // cutDownTime: 300000
-            cutDownTime: 30000
+            cutDownTime: 300000
         }
     }
     
@@ -61,7 +61,7 @@ export class TimeReast extends Component< myprops,mystate > {
     const min = Math.floor(countDown/1000/60)
 	const second = Math.floor(countDown/1000%60)
     const time = `${min}:${second<10?`0${second}`:second}`
-    const percent = 1 - this.state.cutDownTime/30000
+    const percent = 1 - this.state.cutDownTime/300000
     return (
       <div>
         <div className="cutDownTime">
