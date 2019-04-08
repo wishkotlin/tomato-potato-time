@@ -61,7 +61,13 @@ export class TimeAction extends Component<myprops,mysatte> {
           //     })
           //   },1000 )
           // }
-      
+          
+            let link:any = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.type = 'image/x-icon';
+            link.rel = 'shortcut icon';
+            link.href = 'https://ws1.sinaimg.cn/large/8660d1bbly1g1vjxskqfbj205k05kmx2.jpg';
+            document.getElementsByTagName('head')[0].appendChild(link);
+        
           
           // let tempstartTime = localStorage.getItem("Time")
         //   console.log("componentDidMount",this.state)
@@ -98,6 +104,13 @@ export class TimeAction extends Component<myprops,mysatte> {
           localStorage.removeItem("Time")
           this.props.CancelTimeAction()
           message.success('番茄时间已放弃');
+          document.title = `Hey番茄土豆`;
+          let link:any = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.type = 'image/x-icon';
+            link.rel = 'shortcut icon';
+            link.href = '/Tomato-potato-time/favicon.ico';
+            document.getElementsByTagName('head')[0].appendChild(link);
+          
         }
 
    componentWillUnmount(){
@@ -113,9 +126,11 @@ export class TimeAction extends Component<myprops,mysatte> {
   render() {
     let countDown = this.state.cutDownTime 
     const min = Math.floor(countDown/1000/60)
-	const second = Math.floor(countDown/1000%60)
+	  const second = Math.floor(countDown/1000%60)
     const time = `${min}:${second<10?`0${second}`:second}`
     const percent = 1 - this.state.cutDownTime/this.props.duration
+    // const title = document.title;
+    document.title = `${time} - Hey番茄土豆`;
     return (
       <div className="cutDownTime">
           <span className="restTime">{ time }</span>
