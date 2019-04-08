@@ -2,7 +2,7 @@ import React from 'react'
 import { Input, Icon,Checkbox,Collapse,Tooltip } from 'antd';
 import { TodoModel,ownUser } from "../../utils/learnCloud"
 interface myprops{
-
+  SyncTodo: any
 }
 interface mystate{
     description: any,
@@ -25,7 +25,7 @@ private checkbox: React.RefObject<any>
       description: "",
       HasTodoList: false,
       Todolist: [],
-      Complete:[],
+      Complete: [],
       activeKey: [""],
       AllTodo: {}//将 Todolist 与 Complete 合并
     };
@@ -220,6 +220,7 @@ private checkbox: React.RefObject<any>
         }),() => {
           console.log(this.state.Todolist)
           console.log(this.state.Complete)
+          console.log()
           localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
           localStorage.setItem("Complete",JSON.stringify(this.state.Complete))
         } )
@@ -232,7 +233,7 @@ private checkbox: React.RefObject<any>
     );
     
     // console.log(this.state.Todolist.length)
-    if( this.state.Todolist.filter( (item:any) => item.checked === false ).length !== 0 ){
+    if( this.state.Todolist.filter( (item:any) => item.checked === true ).length !== 0 ){
       this.setState( () => ({
         HasTodoList: true
       }) ,() => {
@@ -323,12 +324,24 @@ private checkbox: React.RefObject<any>
     }
   }
 
+
+  componentWillReceiveProps(nextProps:any) {//componentWillReceiveProps方法中第一个参数代表即将传入的新的Props
+    if (this.props.SyncTodo !== nextProps.SyncTodo){
+      console.log("SyncTodo更新")
+        //在这里我们仍可以通过this.props来获取旧的外部状态
+        //通过新旧状态的对比，来决定是否进行其他方法
+        this.setState({
+          Todolist: nextProps.SyncTodo
+        })
+    }
+}
+
   render() {
     // const CheckboxGroup = Checkbox.Group;
-    const { description,HasTodoList,Complete } = this.state;
+    const { description,Complete,Todolist } = this.state;
     // const plainOptions = Todolist;
     const suffix = description ? <Icon type="enter" onClick={this.enter} /> : null;
-    const Todo = HasTodoList === false ? (<div className="check-circle">
+    const Todo = Todolist.filter( (item:any) => item.checked === false ).length === 0 ? (<div className="check-circle">
     <Icon type="check-circle" />
     <p>没有记录</p>
   </div>) : ( this.state.Todolist.filter( (item:any) => item.checked === false ).map((item:any,key:any) => {

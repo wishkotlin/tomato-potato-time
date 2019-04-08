@@ -1,13 +1,13 @@
 import React from 'react'
 // import { Spin,Button } from 'antd';
-import { Menu, Dropdown, Icon, message,Layout,Skeleton, } from "antd"
+import { Menu, Dropdown, Icon, message,Layout,Skeleton,Tooltip } from "antd"
 import { withRouter } from "react-router-dom";
 import axios from "../../utils/Axios";
 // import "../static/bg.mp4"
 import "./index.scss";
 import Todos from "../todos/Todos";
 import Time from "../time/Time";
-import { ownUser,signOut } from "../../utils/learnCloud"
+import { ownUser,signOut,TodoModel } from "../../utils/learnCloud"
 // import Login from "./Login";
 interface myprops{
   history:any,
@@ -15,7 +15,13 @@ interface myprops{
 interface mystate{
   test:boolean,
   username:any,
-  loading: boolean
+  loading: boolean,
+  SyncSuccess: boolean,
+  Sync: boolean,
+  Syncing: boolean,
+  SyncError: boolean,
+  SyncTodo:any,
+  SyncTomato: any
 }
 
 // const {
@@ -46,7 +52,13 @@ class Index extends React.Component<myprops,mystate> {
         this.state = {
           test: false,
           username: "",
-          loading: true
+          loading: true,
+          SyncSuccess: false,
+          Sync: false,
+          Syncing: false,
+          SyncError: false,
+          SyncTodo: [],
+          SyncTomato: []
         } as mystate
     }
 
@@ -57,10 +69,10 @@ class Index extends React.Component<myprops,mystate> {
     this.setState({
       username: ""
     })
-    this.props.history.push("/Tomato-potato-time/login")
+    this.props.history.push("/login")
   }
   indexsignup = () => {
-    this.props.history.push("/Tomato-potato-time/signup")
+    this.props.history.push("/signup")
   }
   play = (e:any) => {
     // let video = document.querySelectorAll(".kv-vbg")
@@ -158,7 +170,7 @@ class Index extends React.Component<myprops,mystate> {
       }
     );
     if(JSON.stringify(tempuser) === JSON.stringify({})){
-      this.props.history.push("/Tomato-potato-time/login")
+      this.props.history.push("/login")
     }
     this.showOpcity = setTimeout(() => {
       this.setState( () => ({
@@ -247,30 +259,138 @@ class Index extends React.Component<myprops,mystate> {
     // }
 }
 
+showSuccessSync = () => {
+  console.log('showSuccessSync')
+  this.setState({
+    SyncSuccess:true
+  },() =>{
+    setTimeout( () => {
+      this.setState({
+        SyncSuccess: false,
+        Sync: false
+      })
+    },2000 )
+  })
+  
+}
+
+  Sync = () => {
+    this.setState({
+      Sync: true,
+      Syncing: true
+    })
+    let user = ownUser();
+    console.log('同步');
+    TodoModel.getAll(user,
+      (res:any) => {
+      console.log('successFnTodo',res);
+      // let tempTodoList = JSON.parse(JSON.stringify(this.state))//深拷贝
+      // tempTodoList.Todolist = res
+      // tempTodoList.Complete = res
+      // tempTodoList.HasTodoList = true
+      // this.setState(tempTodoList,() => {
+      //   console.log("getByUserTodo",this.state)
+      //   localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
+      //   localStorage.setItem("Complete",JSON.stringify(this.state.Complete))
+      // })
+      this.setState({
+        SyncTodo: res,
+        Syncing: false
+      },() => {
+        console.log(this.state.SyncTodo)
+        localStorage.setItem("Todolist",JSON.stringify(this.state.SyncTodo))
+        localStorage.setItem("Complete",JSON.stringify(this.state.SyncTodo))
+        this.showSuccessSync()
+      })
+    },
+    (error:any) => {
+      this.setState({
+        
+      })
+      console.log('errorFnTo',error)
+    },
+    (res:any) => {
+      console.log('successTomato',res);
+      // let tempTodoList = JSON.parse(JSON.stringify(this.state))//深拷贝
+      // tempTodoList.Todolist = res
+      // tempTodoList.Complete = res
+      // tempTodoList.HasTodoList = true
+      // this.setState(tempTodoList,() => {
+      //   console.log("getByUserTodo",this.state)
+      //   localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
+      //   localStorage.setItem("Complete",JSON.stringify(this.state.Complete))
+      // })
+      this.setState({
+        SyncTomato: res
+      },() => {
+        console.log(this.state.SyncTomato)
+        localStorage.setItem('Tomato',JSON.stringify(this.state.SyncTomato))
+      })
+    },
+    (error:any) => {
+      console.log('errorFnTomato',error)
+    }
+
+    )
+   
+  }
+
 
   render() {
+    const SuccessSyncSvg = () => (
+      <svg viewBox="0 0 32 32" id="icon-sync-succeed" width="1em" height="1em"><path d="M28.179 20.571h-5.321L26.287 24c-2.393 3.036-6.107 5.036-10.286 5.036-7.179 0-13.036-5.857-13.036-13.036 0-.786.071-1.536.214-2.286h-3C.072 14.464 0 15.214 0 16c0 8.821 7.179 16 16 16 5 0 9.429-2.321 12.357-5.929L32 29.714v-9.143h-3.821zM3.821 11.429h5.321L5.713 8c2.393-3.036 6.107-5.036 10.286-5.036 7.179 0 13.036 5.857 13.036 13.036 0 .786-.071 1.536-.214 2.286h3c.107-.75.179-1.5.179-2.286 0-8.821-7.179-16-16-16-5 0-9.429 2.321-12.357 5.929L0 2.286v9.143h3.821zm7.036 2.714l-2.5 2.5 6.25 6.25 10-11.25-2.5-2.5-7.5 8.75-3.75-3.75z"></path></svg>
+    )
+
+    const SuccessSyncIcon = (props:any) => (
+      <Icon component={SuccessSyncSvg} {...props} />
+    );
+
+    const ErrorSyncSvg = () => (
+      <svg viewBox="0 0 28 32" id="icon-sync-failed" width="1em" height="1em"><path d="M16 18h-4V8h4v10zm-4 6h4v-4h-4v4zm12.66-4H20l3 3c-2.1 2.66-5.34 4.4-9 4.4-6.28 0-11.4-5.12-11.4-11.4 0-.68.06-1.34.18-2H.16c-.1.66-.16 1.32-.16 2 0 7.72 6.28 14 14 14 4.38 0 8.26-2.04 10.82-5.18L28 28v-8h-3.34zM3.34 12H8L5 9c2.1-2.66 5.34-4.4 9-4.4 6.28 0 11.4 5.12 11.4 11.4 0 .68-.06 1.34-.18 2h2.62c.1-.66.16-1.32.16-2 0-7.72-6.28-14-14-14C9.62 2 5.74 4.04 3.18 7.18L0 4v8h3.34z"></path></svg>
+    )
+    const ErrorSyncIcon = (props:any) => (
+      <Icon component={ErrorSyncSvg} {...props} />
+    )
+
+    // let showSync = "display: none;"
+
     return (
       <div className="index opsity">
       <Layout>
       <Header>
 
       <span className="logo">欢迎使用Hey番茄土豆</span>
+      <span>
+      <Tooltip placement="top" title="同步成功" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow>
+      <SuccessSyncIcon className={ this.state.SyncSuccess ? `SuccessSyncIcon` : 'SuccessSyncIcon synchide' } />
+      </Tooltip>
+      <Tooltip placement="top" title="与服务器同步数据" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow>      
+      <Icon onClick={ this.Sync } type="sync" className={ this.state.Sync ? `sync synchide` : `sync` } />
+      </Tooltip>
+      <Tooltip placement="top" title="正在同步数据" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow>      
+      <Icon type="sync" className={ this.state.Syncing ? `syncing` : `syncing synchide` } />
+      </Tooltip>
+      <Tooltip placement="top" title="同步失败" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow>
+      <ErrorSyncIcon className={ this.state.SyncError ? `ErrorSyncIcon` : `ErrorSyncIcon synchide` } />
+      </Tooltip>
               <Dropdown overlay={this.menu} trigger={['click']}>
                 <a className="ant-dropdown-link" href="javascript:;">
                 <span>{ this.state.username || "请登录" } <Icon type="down" /></span>
                 </a>
               </Dropdown>
+      </span>
+      
       </Header>
      
       <div className="index_main">
       <Skeleton loading={this.state.loading}>
       <Content>
-        <Time />
+        <Time SyncTomato={ this.state.SyncTomato } />
       </Content>
       </Skeleton>
       <Skeleton loading={this.state.loading}>
       <Content>
-        <Todos />
+        <Todos SyncTodo={this.state.SyncTodo} />
       </Content>
       </Skeleton>
       </div>
@@ -288,7 +408,7 @@ class Index extends React.Component<myprops,mystate> {
         <Button onClick={this.indexlogout} type="primary" className="indexlogin">退出</Button>
        
       </div>
-      <video ref={this.video} onTouchStart={this.play} onMouseLeave={this.play} muted autoPlay src={"https://raw.githubusercontent.com/liulinboyi/Tomato-potato-time/master/src/static/bg.mp4"} className="kv-vbg" preload="auto"></video>
+      <video ref={this.video} onTouchStart={this.play} onMouseLeave={this.play} muted autoPlay src={"https://raw.githubusercontent.com/liulinboyi/master/src/static/bg.mp4"} className="kv-vbg" preload="auto"></video>
        */}
         {/* <Login /> */}
         {/* <Button onClick={this.indexlogout} type="primary" className="indexlogin">退出</Button> */}

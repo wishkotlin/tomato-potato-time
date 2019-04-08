@@ -49,6 +49,40 @@
             font-weight: bold;
         }
     }
+    .syncing{
+        padding-right: 10px;
+        vertical-align: middle;
+        cursor: pointer;
+        svg{
+            animation: spin 2s infinite linear;
+            animation-direction: reverse;
+        }
+        
+    }
+    .sync{
+        padding-right: 10px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    .SuccessSyncIcon{
+        padding-right: 10px;
+        fill: #888;
+        vertical-align: middle;
+        cursor: pointer;
+        .synchide{
+            display: none;
+        }
+    }
+    .ErrorSyncIcon{
+        padding-right: 10px;
+        fill: #888;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    .synchide{
+        display: none;
+    }
+    
     .ant-input{
         /*width: 90%;*/
         
@@ -363,4 +397,14 @@
 }
 .opsity{
     opacity: 0;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0);
+    }
+    
+    100% {
+        transform: rotate(359deg);
+    }
 }

@@ -83,6 +83,34 @@ export const TodoModel = {
     );
   },
 
+  getAll(user:any, successFnTodo:any, errorFnTo:any,successTomato:any,errorFnTomato:any){
+    let query1 = new AV.Query("Todo");
+    let query2 = new AV.Query("Tomato");
+    // let queryAll = AV.Query.and(query1, query2);
+    query1.find().then(
+      response => {
+        let array = response.map((t:any) => {
+          return { id: t.id, ...t.attributes };
+        });
+        successFnTodo.call(null, array);
+      },
+      error => {
+        errorFnTo && errorFnTo.call(null, error);
+      }
+    );
+    query2.find().then(
+      response => {
+        let array = response.map((t:any) => {
+          return { id: t.id, ...t.attributes };
+        });
+        successTomato.call(null, array);
+      },
+      error => {
+        errorFnTomato && errorFnTomato.call(null, error);
+      }
+    );
+  },
+
 
   getByUserTomato(user:any, successFn:any, errorFn:any) {
     // 文档见 https://leancloud.cn/docs/leanstorage_guide-js.html#批量操作

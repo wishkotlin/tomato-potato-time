@@ -10,6 +10,7 @@ interface myprops{
   // actionUpdateTime:any,
   // UpdateTime:any
   // cutDownTime:any
+  SyncTomato:any
 }
 interface mystate{
   createTime:any,
@@ -182,6 +183,16 @@ class Time extends Component< myprops,mystate > {
   componentWillUpdate(){
     
   }
+  componentWillReceiveProps(nextProps:any) {//componentWillReceiveProps方法中第一个参数代表即将传入的新的Props
+    if (this.props.SyncTomato !== nextProps.SyncTomato){
+        //在这里我们仍可以通过this.props来获取旧的外部状态
+        //通过新旧状态的对比，来决定是否进行其他方法
+        console.log("SyncTomato更新")
+        this.setState({
+          Tomoto: nextProps.SyncTomato
+        })
+    }
+}
 
   // shouldComponentUpdate(nextstate:any,nextprops:any){
 
