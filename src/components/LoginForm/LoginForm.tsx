@@ -55,8 +55,10 @@ class NormalLoginForm extends React.Component<any,loginState> {
           };
           let error = (error:any) => {
             if (error.code === 210) {
+              message.destroy()
               message.warning("账户与密码不匹配");
             } else if (error.code === 219) {
+              message.destroy()
               message.error("登录失败次数超过限制，请稍候再试，或者通过忘记密码重设密码");
             }
             console.log(error.code);

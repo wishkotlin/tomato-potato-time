@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import "./TimeAction.scss"
 import { Popconfirm } from "antd"
+import Url from '../static/quick_ticking.ogg'
 
 interface mystate{
-  RestTime:any
+  RestTime:any,
+  audioUrl:any
 }
 interface myprops{
     Rstart:any,
@@ -12,12 +14,15 @@ interface myprops{
 
 export class TimeReast extends Component< myprops,mystate > {
     tick: any = null
+    newaudio: any
     constructor(props:any){
         super(props)
         this.state = {
             // cutDownTime: 300000
-            RestTime: 300000
+            RestTime: 300000,
+            audioUrl: Url
         }
+        this.newaudio = new Audio(this.state.audioUrl)
     }
     
     componentDidMount(){
@@ -48,6 +53,8 @@ export class TimeReast extends Component< myprops,mystate > {
                 // let time = new Date().getTime()
             console.log("this.state.cutDownTime",this.state.RestTime)
             localStorage.setItem("TimeRest",JSON.stringify(this.state))
+            //开始播放 计时音乐
+            this.newaudio.play()
           })
           if(this.state.RestTime < 1000){
             localStorage.removeItem("Time")
@@ -70,6 +77,8 @@ export class TimeReast extends Component< myprops,mystate > {
             link.rel = 'shortcut icon';
             link.href = '/Tomato-potato-time/Tomato.png';
             document.getElementsByTagName('head')[0].appendChild(link);
+
+      this.newaudio.pause()
     }
 
 

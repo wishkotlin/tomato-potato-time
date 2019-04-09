@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import "./TimeAction.scss"
 import { Popconfirm,message   } from "antd"
+import Url from "../static/quick_ticking.ogg";
 interface mysatte{
     startTime:any,
-    cutDownTime:any
+    cutDownTime:any,
+    audioUrl: any,
+    play: any
 }
 interface myprops{
     cutDownTime:any,
@@ -17,18 +20,42 @@ interface myprops{
 
 export class TimeAction extends Component<myprops,mysatte> {
     tick: any;
-
+    newaudio: any
+    private audiourl: React.RefObject<HTMLAudioElement>;
     constructor(props:any){
         super(props)
+        this.audiourl = React.createRef();
         this.state = {
             startTime:"",
-            cutDownTime: this.props.cutDownTime
+            cutDownTime: this.props.cutDownTime,
+            audioUrl: Url,
+            play:false
         }
         this.tick = null
+        this.newaudio = new Audio(this.state.audioUrl)
     }
 
+    
+
+
+
+    togglePlay = () => {
+      this.setState({ 
+        play: !this.state.play,
+        audioUrl: 'https://static.pomotodo.com/app/sounds/quick_ticking-7bfabde6.ogg?v=3' 
+      }, () => {
+        // this.state.play ? this.newaudio.play() : this.newaudio.pause();
+        this.newaudio.play()
+      });
+    }
 
     componentDidMount(){
+
+
+
+
+
+      this.togglePlay()
 
         // let tempstartTime = localStorage.getItem("Time")
         // if(tempstartTime !== null){
@@ -87,6 +114,7 @@ export class TimeAction extends Component<myprops,mysatte> {
                 this.props.synccutDownTime(this.state.cutDownTime)
                 // console.log('TimeAction 设置localStorage')
                 localStorage.setItem("cutDownTime",JSON.stringify(this.state))
+                this.newaudio.play()
               })
               if(this.state.cutDownTime < 1000){
                 // localStorage.removeItem("Time")
@@ -98,6 +126,12 @@ export class TimeAction extends Component<myprops,mysatte> {
           
           
         }
+
+
+
+
+
+        
 
 
         Confirm = () => {
@@ -113,7 +147,8 @@ export class TimeAction extends Component<myprops,mysatte> {
             link.rel = 'shortcut icon';
             link.href = '/Tomato-potato-time/Tomato.png';
             document.getElementsByTagName('head')[0].appendChild(link);
-          
+            //关闭 滴答
+            this.newaudio.pause()
         }
 
    componentWillUnmount(){
@@ -123,6 +158,26 @@ export class TimeAction extends Component<myprops,mysatte> {
         clearInterval(this.tick)
       }
   }
+
+  controlAudio = () => {
+    // e.persist()
+    // console.log(e)
+    console.log(this.audiourl)
+    let audio:any = this.audiourl.current
+    this.setState({
+      audioUrl: "https://static.pomotodo.com/app/sounds/quick_ticking-7bfabde6.ogg?v=3"
+    })
+    audio.play()
+  }
+
+  // alert = (tSc:any) => {
+  //   this.audiourl = React.createRef();
+  //   // if(tSc === timerStates.COMPLETE)
+  //    return (
+  //     <audio ref={this.audiourl} src='https://static.pomotodo.com/app/sounds/quick_ticking-7bfabde6.ogg?v=3' autoPlay/>
+  //    )
+  //  }
+  
 
 
 
@@ -139,6 +194,10 @@ export class TimeAction extends Component<myprops,mysatte> {
           <span className="restTime">{ time }</span>
           <div className="progress" style={{width: `${percent*100}%`}}/>
           <Popconfirm onConfirm={ this.Confirm  } title="您目前正在一个番茄工作时间中，要放弃这个番茄吗？" okText="确定" cancelText="取消"><span className="TimeActioncancel">×</span></Popconfirm>
+          {/* <audio ref={ this.audiourl } onCanPlay={ this.controlAudio } style={{ display: 'none', }} src={ this.state.audioUrl } controls preload="none" controlsList="nodownload" >
+                      <track kind="captions" />
+                      您的浏览器不支持 audio 元素。
+          </audio> */}
       </div>
     )
   }
