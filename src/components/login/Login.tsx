@@ -6,6 +6,7 @@ import { RouteComponentProps, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { actionshow,actionhide } from "../../redux/actions";
 import WrappedNormalLoginForm from "../LoginForm/LoginForm"
+import logo from "../../static/logo.svg";
 // import axios from "../../utils/Axios"
 // @withRouter
 
@@ -35,9 +36,13 @@ class Login extends Component<IProps> {
       }
       // console.log("Login 的 props",this.props)
   }
+  componentDidMount(){
+    console.log("%c    ","background: url(https://ws1.sinaimg.cn/large/8660d1bbly1g1w7kd4wb6j209g06ydfn.jpg) no-repeat left center;font-size: 11em;","\n");
+  }
   render() {
     return (
       <div className="login">
+      <img src={logo} alt=""/>
         <p>Hey番茄土豆登录</p>
         <WrappedNormalLoginForm />
         {/* <Button

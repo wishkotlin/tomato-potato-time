@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 // import axios from '../../utils/Axios';
 import "../../App.scss";
 import { signUp,ownUser } from "../../utils/learnCloud"
+import logo from '../../static/logo.svg';
 
 interface MyProps {
   form:any,
@@ -231,6 +232,7 @@ export default class Singup extends Component {
   render() {
     return (
       <div className="signup">
+      <img src={logo} alt=""/>
       <p>Hey番茄土豆注册</p>
         <WrappedNormalLoginForm />
       </div>

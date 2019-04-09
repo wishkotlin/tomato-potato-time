@@ -28,7 +28,7 @@
   align-items: center;
   flex-direction: column;
 
-  &>p:nth-child(1){
+  &>p:nth-child(2){
     font-size: 30px;
     font-weight: bold;
   }
@@ -41,6 +41,9 @@
   }
   .login-form-button {
     width: 100%;
+  }
+  img{
+    height: 15em;
   }
   /*
   @media (min-width: 1200px) {
@@ -78,7 +81,7 @@
   padding-top: 50px;
   align-items: center;
   flex-direction: column;
-  &>p:nth-child(1){
+  &>p:nth-child(2){
     font-size: 30px;
     font-weight: bold;
   }
@@ -91,6 +94,9 @@
   }
   .login-form-button {
     width: 100%;
+  }
+  img{
+    height: 15em;
   }
   /*
   @media (max-width: 1200px) {
