@@ -45,8 +45,18 @@
             line-height: 4em;
             height: 4em;
             */
+           
+        }
+    }
+    .logo{
+        img{
+            display: inline;
+            height: 9em;
+        }
+        span{
             font-size: 1.5em;
             font-weight: bold;
+            vertical-align: middle;
         }
     }
     .syncing{

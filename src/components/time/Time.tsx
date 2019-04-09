@@ -43,8 +43,8 @@ class Time extends Component< myprops,mystate > {
       startTime: null,
       UpdataTime: "",
       // duration: 1500000,//时间间隔
-      duration: 1500000,//时间间隔
-      cutDownTime: 1500000,
+      duration: 10000,//时间间隔
+      cutDownTime: 10000,
       TimeNow: "",
       Tomoto: []
     }
@@ -60,7 +60,7 @@ class Time extends Component< myprops,mystate > {
       // description: "",
       startTime: tempcreateTime,
       UpdataTime: "",
-      cutDownTime: 1500000
+      cutDownTime: 10000
     } ,() => {
       // this.props.actionUpdateTime(this.state.cutDownTime)
       // console.info("this.props.UpdateTime.UpdataTime",this.props.UpdateTime.UpdateTime[0])
@@ -231,11 +231,19 @@ class Time extends Component< myprops,mystate > {
     })
   }
 
+  synccutDownTime = (value:any) => {
+    console.log("synccutDownTime",value)
+    this.setState({
+      cutDownTime: value
+    }, () => {
+      console.log('cutDownTime',this.state.cutDownTime)
+    })
+  }
 
   
   render() {
     // let TimeNow = new Date().getTime()
-    let TimeNow = new Date().getTime()
+    // let TimeNow = new Date().getTime()
     // console.log(TimeNow,this.state.startTime,TimeNow - this.state.startTime)
     let Tomato =  this.state.Tomoto.length === 0 ? (<div className="clock-circle"><Icon type="clock-circle" />
     <p>没有记录</p></div>) : (this.state.Tomoto.map( (item:any,key:any) => {
@@ -244,7 +252,8 @@ class Time extends Component< myprops,mystate > {
     // console.log("Tomato render",this.state.Tomoto.length)
     let TimeResult
     if(this.state.startTime !== null){
-      if(TimeNow - this.state.startTime > this.state.duration){
+      // if(TimeNow - this.state.startTime > this.state.duration){
+      if( this.state.cutDownTime <= 0){
         TimeResult =  this.state.description.length === 0 ? (
         <div className="TimeInput"><Input onKeyDown={ this.Timeonkey } 
         // value={ this.state.description } 
@@ -263,6 +272,7 @@ class Time extends Component< myprops,mystate > {
           startTime={ this.state.startTime }
           duration={ this.state.duration }
           CancelTimeAction={ this.CancelTimeAction }
+          synccutDownTime={ this.synccutDownTime }
           />
           
           { Tomato }

@@ -8,6 +8,7 @@ import "./index.scss";
 import Todos from "../todos/Todos";
 import Time from "../time/Time";
 import { ownUser,signOut,TodoModel } from "../../utils/learnCloud"
+import logo from '../../static/logo.svg';
 // import Login from "./Login";
 interface myprops{
   history:any,
@@ -352,6 +353,15 @@ showSuccessSync = () => {
       <Icon component={ErrorSyncSvg} {...props} />
     )
 
+    // const LogoSvg = () => (
+      
+    // )
+
+    // const LogoIcon = (props:any) => (
+    //   <Icon component={LogoSvg} {...props} />
+    // )
+
+
     // let showSync = "display: none;"
 
     return (
@@ -359,7 +369,10 @@ showSuccessSync = () => {
       <Layout>
       <Header>
 
-      <span className="logo">欢迎使用Hey番茄土豆</span>
+      <div className="logo">
+      <img src={logo} alt=""/>
+      <span>欢迎使用Hey番茄土豆</span>
+      </div>
       <span>
       <Tooltip placement="top" title="同步成功" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow>
       <SuccessSyncIcon className={ this.state.SyncSuccess ? `SuccessSyncIcon` : 'SuccessSyncIcon synchide' } />
