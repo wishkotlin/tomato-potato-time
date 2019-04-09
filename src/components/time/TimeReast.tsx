@@ -3,7 +3,7 @@ import "./TimeAction.scss"
 import { Popconfirm } from "antd"
 
 interface mystate{
-    cutDownTime:any
+  RestTime:any
 }
 interface myprops{
     Rstart:any,
@@ -16,33 +16,43 @@ export class TimeReast extends Component< myprops,mystate > {
         super(props)
         this.state = {
             // cutDownTime: 300000
-            cutDownTime: 300000
+            RestTime: 300000
         }
     }
     
     componentDidMount(){
         // console.log("this.props.cutDownTime父子组件传值",this.props.cutDownTime)
         
+
+        let link:any = document.querySelector("link[rel*='icon']") || document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = 'https://ws1.sinaimg.cn/large/8660d1bbly1g1vjxskqfbj205k05kmx2.jpg';
+        document.getElementsByTagName('head')[0].appendChild(link);
+
+
+
         let TimeRest = localStorage.getItem("TimeRest")
         if(TimeRest !== null){
-          let tempTimeRest = JSON.parse(TimeRest).cutDownTime
+          let tempTimeRest = JSON.parse(TimeRest).RestTime
           this.setState({
-            cutDownTime: tempTimeRest
+            RestTime: tempTimeRest
           })
 
         }
         
         this.tick = setInterval(  () => {
             this.setState( (prestate,props) => ({
-              cutDownTime: prestate.cutDownTime - 1000,
+              RestTime: prestate.RestTime - 1000,
             }),() => {
                 // let time = new Date().getTime()
-            console.log("this.state.cutDownTime",this.state.cutDownTime)
+            console.log("this.state.cutDownTime",this.state.RestTime)
             localStorage.setItem("TimeRest",JSON.stringify(this.state))
           })
-          if(this.state.cutDownTime < 1000){
+          if(this.state.RestTime < 1000){
             localStorage.removeItem("Time")
             localStorage.removeItem("TimeRest")
+            localStorage.removeItem("cutDownTime")
             this.props.Rstart(null)//子组件 通过父组件的函数 修改父组件的值 来传值
             clearInterval(this.tick)
           }
@@ -53,15 +63,23 @@ export class TimeReast extends Component< myprops,mystate > {
       this.props.CancelTimeAction()
       localStorage.removeItem("Time")
       localStorage.removeItem("TimeRest")
+      localStorage.removeItem("cutDownTime")
+      document.title = `Hey番茄土豆`;
+      let link:any = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.type = 'image/x-icon';
+            link.rel = 'shortcut icon';
+            link.href = '/Tomato-potato-time/Tomato.png';
+            document.getElementsByTagName('head')[0].appendChild(link);
     }
 
 
   render() {
-    let countDown = this.state.cutDownTime 
+    let countDown = this.state.RestTime 
     const min = Math.floor(countDown/1000/60)
-	const second = Math.floor(countDown/1000%60)
+	  const second = Math.floor(countDown/1000%60)
     const time = `${min}:${second<10?`0${second}`:second}`
-    const percent = 1 - this.state.cutDownTime/300000
+    const percent = 1 - this.state.RestTime/300000
+    document.title = `${time} - Hey番茄土豆`;
     return (
       <div>
         <div className="cutDownTime">

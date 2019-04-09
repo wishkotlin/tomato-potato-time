@@ -8,7 +8,7 @@ import "./index.scss";
 import Todos from "../todos/Todos";
 import Time from "../time/Time";
 import { ownUser,signOut,TodoModel } from "../../utils/learnCloud"
-import logo from '../../static/logo.svg';
+// import logo from '../../static/logo.svg';
 // import Login from "./Login";
 interface myprops{
   history:any,
@@ -93,7 +93,7 @@ class Index extends React.Component<myprops,mystate> {
       // window.location.href="移动端url";
           // alert("mobile")
           // document.getElementById()
-          console.log("video",this.video.current)
+          // console.log("video",this.video.current)
           if(this.video.current && this.video.current.parentNode){
             this.video.current.parentNode.removeChild(this.video.current)
           }
@@ -371,7 +371,7 @@ showSuccessSync = () => {
       <Header>
 
       <div className="logo">
-      <img src={logo} alt=""/>
+      {/* <img src={logo} alt=""/> */}
       <span>欢迎使用Hey番茄土豆</span>
       </div>
       <span>
@@ -389,7 +389,8 @@ showSuccessSync = () => {
       </Tooltip>
               <Dropdown overlay={this.menu} trigger={['click']}>
                 <a className="ant-dropdown-link" href="javascript:;">
-                <span>{ this.state.username || "请登录" } <Icon type="down" /></span>
+                <p>{ this.state.username || "请登录" } </p>
+                <Icon type="down" />
                 </a>
               </Dropdown>
       </span>

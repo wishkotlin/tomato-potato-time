@@ -58,6 +58,13 @@
             font-weight: bold;
             vertical-align: middle;
         }
+        @media (max-width: 400px) {
+            span{
+            font-size: small;
+            font-weight: bold;
+            vertical-align: middle;
+            }
+        }
     }
     .syncing{
         padding-right: 10px;
@@ -142,6 +149,13 @@
         text-decoration: none;
         line-height: 4em;
         height: 4em;
+        display: -webkit-inline-box;
+        p{
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            width: 8em;
+        }
     }
     &>p:nth-child(1){
         font-size: 20px;

@@ -162,7 +162,15 @@ class Time extends Component< myprops,mystate > {
         cutDownTime: cutDownTime,
         startTime: startTime
       },() => {
-        // console.log("从localstorage获取的",this.state.cutDownTime)
+        console.log("从localstorage获取的 cutDownTime",this.state.cutDownTime)
+      })
+    }else{
+      //如果 输入番茄时间信息后 回车 会清除 cutDownTime localstorage  会导致 下面的判断出错 重新加载 TimeAction 组件
+      //判断条件为是否为 cutDownTime === 0 ？ 
+      this.setState({
+        cutDownTime: 0
+      },() => {
+        console.log("didmount 设置 cutDownTime 为0",this.state.cutDownTime)
       })
     }
     if(Time !== null){
@@ -171,6 +179,8 @@ class Time extends Component< myprops,mystate > {
       this.setState({
         description: tempTime,
         startTime: tempstarttime
+      },() => {
+        console.log('description didmount赋值',this.state.description)
       })
     }
   }
@@ -253,7 +263,7 @@ class Time extends Component< myprops,mystate > {
     let TimeResult
     if(this.state.startTime !== null){
       // if(TimeNow - this.state.startTime > this.state.duration){
-      if( this.state.cutDownTime <= 0){
+      if( this.state.cutDownTime === 0){
         TimeResult =  this.state.description.length === 0 ? (
         <div className="TimeInput"><Input onKeyDown={ this.Timeonkey } 
         // value={ this.state.description } 
