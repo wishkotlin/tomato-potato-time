@@ -331,7 +331,8 @@ private checkbox: React.RefObject<any>
         //在这里我们仍可以通过this.props来获取旧的外部状态
         //通过新旧状态的对比，来决定是否进行其他方法
         this.setState({
-          Todolist: nextProps.SyncTodo
+          Todolist: nextProps.SyncTodo,
+          Complete: nextProps.SyncTodo
         })
     }
 }
