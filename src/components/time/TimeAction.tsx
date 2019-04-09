@@ -85,7 +85,7 @@ export class TimeAction extends Component<myprops,mysatte> {
                     this.props.onUpdata(time)//子组件 通过父组件的函数 修改父组件的值 来传值
                 // console.log("this.state.cutDownTime",this.state.cutDownTime)
                 this.props.synccutDownTime(this.state.cutDownTime)
-                console.log('TimeAction 设置localStorage')
+                // console.log('TimeAction 设置localStorage')
                 localStorage.setItem("cutDownTime",JSON.stringify(this.state))
               })
               if(this.state.cutDownTime < 1000){

@@ -242,11 +242,11 @@ class Time extends Component< myprops,mystate > {
   }
 
   synccutDownTime = (value:any) => {
-    console.log("synccutDownTime",value)
+    // console.log("synccutDownTime",value)
     this.setState({
       cutDownTime: value
     }, () => {
-      console.log('cutDownTime',this.state.cutDownTime)
+      // console.log('cutDownTime',this.state.cutDownTime)
     })
   }
 
