@@ -108,7 +108,7 @@ export class TimeAction extends Component<myprops,mysatte> {
           let link:any = document.querySelector("link[rel*='icon']") || document.createElement('link');
             link.type = 'image/x-icon';
             link.rel = 'shortcut icon';
-            link.href = '/Tomato-potato-time/favicon.ico';
+            link.href = '/Tomato-potato-time/Tomato.png';
             document.getElementsByTagName('head')[0].appendChild(link);
           
         }
