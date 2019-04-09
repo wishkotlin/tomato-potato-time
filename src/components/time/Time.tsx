@@ -43,8 +43,8 @@ class Time extends Component< myprops,mystate > {
       startTime: null,
       UpdataTime: "",
       // duration: 1500000,//时间间隔
-      duration: 10000,//时间间隔
-      cutDownTime: 10000,
+      duration: 1500000,//时间间隔
+      cutDownTime: 1500000,
       TimeNow: "",
       Tomoto: []
     }
@@ -60,7 +60,7 @@ class Time extends Component< myprops,mystate > {
       // description: "",
       startTime: tempcreateTime,
       UpdataTime: "",
-      cutDownTime: 10000
+      cutDownTime: 1500000
     } ,() => {
       // this.props.actionUpdateTime(this.state.cutDownTime)
       // console.info("this.props.UpdateTime.UpdataTime",this.props.UpdateTime.UpdateTime[0])
