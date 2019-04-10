@@ -33,15 +33,19 @@ export class TimeAction extends Component<myprops,mysatte> {
         }
         this.tick = null
         this.newaudio = new Audio(this.state.audioUrl)
-        // this.newaudio.muted = true
+        this.newaudio.muted = 'meted'
         this.newaudio.allow = "autoplay"//否则 会出现 play() failed because the user didn't interact with the document first
-    }
+        this.newaudio.autoplay = true
+      }
 
     
 
 
 
     togglePlay = () => {
+
+      // this.newaudio.muted = true//设置静音
+      // console.log('设置静音')
       this.setState({ 
         play: !this.state.play,
         audioUrl: 'https://static.pomotodo.com/app/sounds/quick_ticking-7bfabde6.ogg?v=3' 
@@ -51,14 +55,20 @@ export class TimeAction extends Component<myprops,mysatte> {
         // this.newaudio.play()
         let mediaPromise = this.newaudio.play()
         if(mediaPromise !== null){
-          console.log('mediaPromise',mediaPromise)
+          // console.log('mediaPromise',mediaPromise)
           mediaPromise.then( () => {
-            console.log('then')
+            // console.log('then')
+           
+            // console.log('取消静音')
             this.newaudio.play()
+            this.newaudio.muted = false
           } ).catch( 
             () => { 
-              console.log('catch')
+              // console.log('catch')
+              // console.log('取消静音')
+              
               this.newaudio.play() 
+              this.newaudio.muted = false
             } )
         }
 
@@ -134,14 +144,16 @@ export class TimeAction extends Component<myprops,mysatte> {
                 // this.newaudio.play()
                 let mediaPromise = this.newaudio.play()
                 if(mediaPromise !== null){
-                  console.log('mediaPromise',mediaPromise)
+                  // console.log('mediaPromise',mediaPromise)
                   mediaPromise.then( () => {
-                    console.log('then')
+                    // console.log('then')
                     this.newaudio.play()
+                    this.newaudio.muted = false
                   } ).catch( 
                     () => { 
-                      console.log('catch')
+                      // console.log('catch')
                       this.newaudio.play() 
+                      this.newaudio.muted = false
                     } )
                 }
               })
