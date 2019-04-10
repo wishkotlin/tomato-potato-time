@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import "./TimeAction.scss"
 import { Popconfirm,message   } from "antd"
-import Url from "../static/quick_ticking.ogg";
+// import Url from "https://dushu-1251966512.cos.ap-beijing.myqcloud.com/quick_ticking.ogg";
 interface mysatte{
     startTime:any,
     cutDownTime:any,
@@ -28,11 +28,13 @@ export class TimeAction extends Component<myprops,mysatte> {
         this.state = {
             startTime:"",
             cutDownTime: this.props.cutDownTime,
-            audioUrl: Url,
+            audioUrl: 'https://dushu-1251966512.cos.ap-beijing.myqcloud.com/quick_ticking.ogg',
             play:false
         }
         this.tick = null
         this.newaudio = new Audio(this.state.audioUrl)
+        // this.newaudio.muted = true
+        this.newaudio.allow = "autoplay"//否则 会出现 play() failed because the user didn't interact with the document first
     }
 
     
@@ -45,7 +47,22 @@ export class TimeAction extends Component<myprops,mysatte> {
         audioUrl: 'https://static.pomotodo.com/app/sounds/quick_ticking-7bfabde6.ogg?v=3' 
       }, () => {
         // this.state.play ? this.newaudio.play() : this.newaudio.pause();
-        this.newaudio.play()
+        
+        // this.newaudio.play()
+        let mediaPromise = this.newaudio.play()
+        if(mediaPromise !== null){
+          console.log('mediaPromise',mediaPromise)
+          mediaPromise.then( () => {
+            console.log('then')
+            this.newaudio.play()
+          } ).catch( 
+            () => { 
+              console.log('catch')
+              this.newaudio.play() 
+            } )
+        }
+
+        // this.newaudio.muted = true
       });
     }
 
@@ -114,12 +131,25 @@ export class TimeAction extends Component<myprops,mysatte> {
                 this.props.synccutDownTime(this.state.cutDownTime)
                 // console.log('TimeAction 设置localStorage')
                 localStorage.setItem("cutDownTime",JSON.stringify(this.state))
-                this.newaudio.play()
+                // this.newaudio.play()
+                let mediaPromise = this.newaudio.play()
+                if(mediaPromise !== null){
+                  console.log('mediaPromise',mediaPromise)
+                  mediaPromise.then( () => {
+                    console.log('then')
+                    this.newaudio.play()
+                  } ).catch( 
+                    () => { 
+                      console.log('catch')
+                      this.newaudio.play() 
+                    } )
+                }
               })
               if(this.state.cutDownTime < 1000){
                 // localStorage.removeItem("Time")
                 // localStorage.removeItem("cutDownTime")
                 clearInterval(this.tick)
+                this.newaudio.pause()
               }
             },1000 )
           // }

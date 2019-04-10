@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import "./TimeAction.scss"
 import { Popconfirm } from "antd"
-import Url from '../static/quick_ticking.ogg'
+// import Url from '../static/quick_ticking.ogg'
 
 interface mystate{
   RestTime:any,
@@ -20,7 +20,7 @@ export class TimeReast extends Component< myprops,mystate > {
         this.state = {
             // cutDownTime: 300000
             RestTime: 300000,
-            audioUrl: Url
+            audioUrl: 'https://dushu-1251966512.cos.ap-beijing.myqcloud.com/quick_ticking.ogg'
         }
         this.newaudio = new Audio(this.state.audioUrl)
     }
@@ -54,6 +54,7 @@ export class TimeReast extends Component< myprops,mystate > {
             console.log("this.state.cutDownTime",this.state.RestTime)
             localStorage.setItem("TimeRest",JSON.stringify(this.state))
             //开始播放 计时音乐
+            this.newaudio.muted = true
             this.newaudio.play()
           })
           if(this.state.RestTime < 1000){
