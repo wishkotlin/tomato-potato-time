@@ -66,7 +66,7 @@ export class TimeAction extends Component<myprops,mysatte> {
             () => { 
               // console.log('catch')
               // console.log('取消静音')
-              
+              this.newaudio.muted = 'meted'
               this.newaudio.play() 
               this.newaudio.muted = false
             } )
@@ -82,7 +82,7 @@ export class TimeAction extends Component<myprops,mysatte> {
 
 
 
-      this.togglePlay()
+      // this.togglePlay()
 
         // let tempstartTime = localStorage.getItem("Time")
         // if(tempstartTime !== null){
@@ -152,7 +152,9 @@ export class TimeAction extends Component<myprops,mysatte> {
                   } ).catch( 
                     () => { 
                       // console.log('catch')
-                      this.newaudio.play() 
+                      this.newaudio = new Audio(this.state.audioUrl)
+                      this.newaudio.muted = 'meted'
+                      this.newaudio.play()
                       this.newaudio.muted = false
                     } )
                 }
