@@ -19,6 +19,17 @@
         box-shadow: 1px 0px 0px 0px rgba(225,225,225,1);
         z-index: 0;
     }
+    .sound{
+        cursor: pointer;
+        position: absolute;
+    }
+    .nosound{
+        cursor: pointer;
+        position: absolute;        
+    }
+    .soundhide{
+        display: none;
+    }
     .TimeActioncancel{
         color: #9C9C97;
         font-family: Tahoma,sans;

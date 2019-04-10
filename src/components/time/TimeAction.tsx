@@ -6,7 +6,8 @@ interface mysatte{
     startTime:any,
     cutDownTime:any,
     audioUrl: any,
-    play: any
+    play: any,
+    sunding:any
 }
 interface myprops{
     cutDownTime:any,
@@ -21,16 +22,17 @@ interface myprops{
 export class TimeAction extends Component<myprops,mysatte> {
     tick: any;
     newaudio: any
-    private audiourl: React.RefObject<HTMLAudioElement>;
+    // private audiourl: React.RefObject<HTMLAudioElement>;
     constructor(props:any){
         super(props)
-        this.audiourl = React.createRef();
+        // this.audiourl = React.createRef();
         this.state = {
             startTime:"",
             cutDownTime: this.props.cutDownTime,
             // audioUrl: 'https://dushu-1251966512.cos.ap-beijing.myqcloud.com/quick_ticking.ogg',
             audioUrl: 'https://static.pomotodo.com/app/sounds/ticking-eedbd7c3.ogg?v=3',
-            play:false
+            play:false,
+            sunding: false
         }
         this.tick = null
         this.newaudio = new Audio(this.state.audioUrl)
@@ -40,49 +42,14 @@ export class TimeAction extends Component<myprops,mysatte> {
         this.newaudio.loop = true
       }
 
-    
-
-
-
-    togglePlay = () => {
-
-      // this.newaudio.muted = true//设置静音
-      // console.log('设置静音')
-      this.setState({ 
-        play: !this.state.play,
-        audioUrl: 'https://static.pomotodo.com/app/sounds/quick_ticking-7bfabde6.ogg?v=3' 
-      }, () => {
-        // this.state.play ? this.newaudio.play() : this.newaudio.pause();
-        
-        // this.newaudio.play()
-        let mediaPromise = this.newaudio.play()
-        if(mediaPromise !== null){
-          // console.log('mediaPromise',mediaPromise)
-          mediaPromise.then( () => {
-            // console.log('then')
-           
-            // console.log('取消静音')
-            this.newaudio.play()
-            this.newaudio.muted = false
-          } ).catch( 
-            () => { 
-              // console.log('catch')
-              // console.log('取消静音')
-              this.newaudio.muted = 'meted'
-              this.newaudio.play() 
-              this.newaudio.muted = false
-            } )
-        }
-
-        // this.newaudio.muted = true
-      });
-    }
+  
 
     componentDidMount(){
 
 
 
-      this.newaudio.play()
+      // this.newaudio.play()
+
       // this.newaudio.muted = true
       // this.togglePlay()
 
@@ -190,27 +157,23 @@ export class TimeAction extends Component<myprops,mysatte> {
       }
   }
 
-  controlAudio = () => {
-    // e.persist()
-    // console.log(e)
-    console.log(this.audiourl)
-    let audio:any = this.audiourl.current
-    this.setState({
-      audioUrl: "https://static.pomotodo.com/app/sounds/quick_ticking-7bfabde6.ogg?v=3"
-    })
-    audio.play()
-  }
 
-  // alert = (tSc:any) => {
-  //   this.audiourl = React.createRef();
-  //   // if(tSc === timerStates.COMPLETE)
-  //    return (
-  //     <audio ref={this.audiourl} src='https://static.pomotodo.com/app/sounds/quick_ticking-7bfabde6.ogg?v=3' autoPlay/>
-  //    )
-  //  }
 
-  click = () => {
-    console.log('模拟点击')
+
+
+  sunding = () => {
+    if(this.state.sunding === true){
+      this.setState({
+        sunding: false
+      })
+      this.newaudio.pause()
+    }else{
+      this.newaudio.play()
+      this.setState({
+        sunding: true
+      })
+    }
+    
   }
   
 
@@ -227,8 +190,10 @@ export class TimeAction extends Component<myprops,mysatte> {
     return (
       <div className="cutDownTime">
           <span className="restTime">{ time }</span>
-          <div onClick={ this.click } className="progress" style={{width: `${percent*100}%`}}/>
+          <div className="progress" style={{width: `${percent*100}%`}}/>
           <Popconfirm onConfirm={ this.Confirm  } title="您目前正在一个番茄工作时间中，要放弃这个番茄吗？" okText="确定" cancelText="取消"><span className="TimeActioncancel">×</span></Popconfirm>
+          <span onClick={this.sunding} className={this.state.sunding ? 'sound' : `sound soundhide`}>🔈</span>
+          <span onClick={this.sunding} className={this.state.sunding ? 'nosound  soundhide' : `nosound`}>🔇</span>
           {/* <audio ref={ this.audiourl } onCanPlay={ this.controlAudio } style={{ display: 'none', }} src={ this.state.audioUrl } controls preload="none" controlsList="nodownload" >
                       <track kind="captions" />
                       您的浏览器不支持 audio 元素。
