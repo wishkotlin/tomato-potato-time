@@ -20,15 +20,16 @@ export class TimeReast extends Component< myprops,mystate > {
         this.state = {
             // cutDownTime: 300000
             RestTime: 300000,
-            audioUrl: 'https://dushu-1251966512.cos.ap-beijing.myqcloud.com/quick_ticking.ogg'
+            audioUrl: 'https://static.pomotodo.com/app/sounds/ticking-eedbd7c3.ogg?v=3'
         }
         this.newaudio = new Audio(this.state.audioUrl)
+        this.newaudio.loop = true
     }
     
     componentDidMount(){
         // console.log("this.props.cutDownTime父子组件传值",this.props.cutDownTime)
         
-
+        this.newaudio.play()
         let link:any = document.querySelector("link[rel*='icon']") || document.createElement('link');
         link.type = 'image/x-icon';
         link.rel = 'shortcut icon';
@@ -54,8 +55,8 @@ export class TimeReast extends Component< myprops,mystate > {
             console.log("this.state.cutDownTime",this.state.RestTime)
             localStorage.setItem("TimeRest",JSON.stringify(this.state))
             //开始播放 计时音乐
-            this.newaudio.muted = true
-            this.newaudio.play()
+            // this.newaudio.muted = true
+            // this.newaudio.play()
           })
           if(this.state.RestTime < 1000){
             localStorage.removeItem("Time")
@@ -63,6 +64,7 @@ export class TimeReast extends Component< myprops,mystate > {
             localStorage.removeItem("cutDownTime")
             this.props.Rstart(null)//子组件 通过父组件的函数 修改父组件的值 来传值
             clearInterval(this.tick)
+            this.newaudio.pause()
           }
         },1000 )
     }

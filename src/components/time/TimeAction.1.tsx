@@ -28,16 +28,14 @@ export class TimeAction extends Component<myprops,mysatte> {
         this.state = {
             startTime:"",
             cutDownTime: this.props.cutDownTime,
-            // audioUrl: 'https://dushu-1251966512.cos.ap-beijing.myqcloud.com/quick_ticking.ogg',
-            audioUrl: 'https://static.pomotodo.com/app/sounds/ticking-eedbd7c3.ogg?v=3',
+            audioUrl: 'https://dushu-1251966512.cos.ap-beijing.myqcloud.com/quick_ticking.ogg',
             play:false
         }
         this.tick = null
         this.newaudio = new Audio(this.state.audioUrl)
-        // this.newaudio.muted = 'meted'
-        // this.newaudio.allow = "autoplay"//否则 会出现 play() failed because the user didn't interact with the document first
-        // this.newaudio.autoplay = true
-        this.newaudio.loop = true
+        this.newaudio.muted = 'meted'
+        this.newaudio.allow = "autoplay"//否则 会出现 play() failed because the user didn't interact with the document first
+        this.newaudio.autoplay = true
       }
 
     
@@ -82,8 +80,8 @@ export class TimeAction extends Component<myprops,mysatte> {
 
 
 
-      this.newaudio.play()
-      // this.newaudio.muted = true
+
+
       // this.togglePlay()
 
         // let tempstartTime = localStorage.getItem("Time")
@@ -144,7 +142,33 @@ export class TimeAction extends Component<myprops,mysatte> {
                 // console.log('TimeAction 设置localStorage')
                 localStorage.setItem("cutDownTime",JSON.stringify(this.state))
                 // this.newaudio.play()
-                
+                let mediaPromise = this.newaudio.play()
+                if(mediaPromise !== null){
+                  // console.log('mediaPromise',mediaPromise)
+                  mediaPromise.then( () => {
+                    // console.log('then')
+                    this.newaudio.play()
+                    this.newaudio.muted = false
+                    let click:any = document.querySelector(".cutDownTime")
+                      if(click !== null){
+                        click.click()
+                        console.log('click')
+                      }
+                  } ).catch( 
+                    () => { 
+                      // console.log('catch')
+                      // this.click()
+                      this.newaudio = new Audio(this.state.audioUrl)
+                      this.newaudio.muted = 'meted'
+                      this.newaudio.play()
+                      this.newaudio.muted = false
+                      let click:any = document.querySelector(".cutDownTime")
+                      if(click !== null){
+                        click.click()
+                        console.log('click')
+                      }
+                    } )
+                }
               })
               if(this.state.cutDownTime < 1000){
                 // localStorage.removeItem("Time")
