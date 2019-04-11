@@ -1,0 +1,27 @@
+#TodoItem{
+    
+    width: 100%;
+    .text{
+        display: block!important;
+        padding-left: 8px;
+    }
+    .editing{
+        background: #fff3d2;
+        display: flex!important;
+        justify-content: space-between;
+        .iconWrapper .anticon{
+            margin-left: 4px;
+            color: #a9a9a9;
+            cursor: pointer;
+        }
+        textarea{
+            border: 0;
+            padding: 0;
+            outline: none;
+            background: transparent;
+            width: 80%;
+            resize: horizontal;
+            height: 26px;
+        }
+    }
+}

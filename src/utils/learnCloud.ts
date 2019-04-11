@@ -128,11 +128,12 @@ export const TodoModel = {
     );
   },
 
-  create({ value,checked }:any, successFn:any, errorFn:any) {
+  create({ value,checked,del }:any, successFn:any, errorFn:any) {
     let Todo = AV.Object.extend("Todo"); 
     let todo = new Todo();
     todo.set("value", value);
     todo.set("checked", checked);
+    todo.set('del',del);
     // todo.set("deleted", deleted);
 
     let acl = new AV.ACL()
@@ -209,11 +210,12 @@ export const TodoModel = {
   },
 
   // update() {},
-  update({id, value, checked}:any, successFn:any, errorFn:any){
+  update({id, value, checked, del}:any, successFn:any, errorFn:any){
     // 文档 https://leancloud.cn/docs/leanstorage_guide-js.html#更新对象
     let todo = AV.Object.createWithoutData('Todo', id)
     value !== undefined && todo.set('value', value)
     checked !== undefined && todo.set('checked', checked)
+    del !== undefined && todo.set('del', del)
     // deleted !== undefined && todo.set('deleted', deleted)
     // 为什么我要像上面那样写代码？
     // 考虑如下场景

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Input, Icon,Checkbox,Collapse,Tooltip } from 'antd';
 import { TodoModel,ownUser } from "../../utils/learnCloud"
+import TodoItem from './TodoItem';
 interface myprops{
   SyncTodo: any
 }
@@ -10,7 +11,9 @@ interface mystate{
     Todolist:any,
     Complete:any,
     activeKey: any,
-    AllTodo:any
+    AllTodo:any,
+    edit: boolean,
+    editing:boolean
 }
 class Todos extends React.Component<myprops,mystate> {
 
@@ -27,7 +30,9 @@ private checkbox: React.RefObject<any>
       Todolist: [],
       Complete: [],
       activeKey: [""],
-      AllTodo: {}//将 Todolist 与 Complete 合并
+      AllTodo: {},//将 Todolist 与 Complete 合并
+      edit: false,
+      editing: false
     };
   }
 
@@ -38,7 +43,8 @@ private checkbox: React.RefObject<any>
         console.log(value)
         let newvalue:any = {
           value: value,
-          checked: false
+          checked: false,
+          del:false
         }
         TodoModel.create(newvalue,(ObjId:any) => {
           console.log("创建成功")
@@ -46,7 +52,8 @@ private checkbox: React.RefObject<any>
       newvalue = {//成功后返回ObjId
         id: ObjId,
         value: value,
-        checked: false
+        checked: false,
+        del:false
       }
       tempenter.push(newvalue)
       this.setState({ 
@@ -82,7 +89,8 @@ private checkbox: React.RefObject<any>
             console.log(value)
             let newvalue:any = {
               value: value,
-              checked: false
+              checked: false,
+              del:false
             }
 
             TodoModel.create(newvalue,(ObjId:any) => {
@@ -91,7 +99,8 @@ private checkbox: React.RefObject<any>
           newvalue = {//成功后返回ObjId
             id: ObjId,
             value: value,
-            checked: false
+            checked: false,
+            del:false
           }
           tempenter.push(newvalue)
           this.setState({ 
@@ -337,6 +346,39 @@ private checkbox: React.RefObject<any>
     }
 }
 
+    edit = (id:any) => {
+      console.log(id)
+      console.log('edit')
+      let {Todolist} = this.state;
+      let temp = Todolist.map( (t:any) => {
+        if(id === t.id){
+          return Object.assign({},t,{editing: true})
+        }else{
+          return Object.assign({},t,{editing: false})
+        }
+      } )
+      
+      this.setState({
+        Todolist: temp,
+        Complete: temp
+      },() => {
+        console.log('editing',this.state.Todolist)
+      })
+    }
+
+    editback = () =>{
+      let {Todolist} = this.state;
+      let temp = Todolist.map( (t:any) => {
+          return Object.assign({},t,{editing: false})
+      } )
+      this.setState({
+        Todolist: temp,
+        Complete: temp
+      },() => {
+        console.log('editing',this.state.Todolist)
+      })
+    }
+
   render() {
     // const CheckboxGroup = Checkbox.Group;
     const { description,Complete,Todolist } = this.state;
@@ -346,10 +388,16 @@ private checkbox: React.RefObject<any>
     <Icon type="check-circle" />
     <p>没有记录</p>
   </div>) : ( this.state.Todolist.filter( (item:any) => item.checked === false ).map((item:any,key:any) => {
-   return <span key={key}><Checkbox ref={this.checkbox}  checked={item.checked} onChange={(e) => {this.Change(e,key)}} /><span>{ item.value }</span></span>
+   return <span key={key}><Checkbox ref={this.checkbox}  checked={item.checked} onChange={(e) => {this.Change(e,key)}} />
+   {/* { this.state.edit ? <textarea value={ item.value } /> : <span onDoubleClick={ () => this.setState({edit: true}) }>{ item.value }</span> } */}
+   <TodoItem editback={this.editback} edit={this.edit} {...item} />
+   </span>
   }))
   const complate = Complete.filter( (item:any) => item.checked === true ).length === 0 ? null : ( this.state.Complete.filter( (item:any) => item.checked === true ).map((item:any,key:any) => {
-    return <span key={key}><Checkbox checked={item.checked} onChange={(e) => {this.Changecom(e,key)}} /><span>{ item.value }</span></span>
+    return <span key={key}><Checkbox checked={item.checked} onChange={(e) => {this.Changecom(e,key)}} />
+    {/* <span>{ item.value }</span> */}
+    <TodoItem editback={this.editback} edit={this.edit} {...item} />
+    </span>
    }))
    const Panel = Collapse.Panel;
    const CleanSvg = () => (
@@ -385,7 +433,7 @@ private checkbox: React.RefObject<any>
           
           { this.state.Complete.filter( (item:any) => item.checked === true ).length === 0 ? null : (<div><Tooltip placement="topRight" title="清理最近完成的任务列表" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow><CleanIcon className="CleanIcon" /></Tooltip>
           <Collapse onChange={this.collapase} bordered={false} defaultActiveKey={this.state.activeKey} activeKey={this.state.activeKey}>
-          <Panel className="noselect" header="最近完成的任务" key="1">
+          <Panel className="" header="最近完成的任务" key="1">
           { complate }
             {/* {text} */}
           </Panel>

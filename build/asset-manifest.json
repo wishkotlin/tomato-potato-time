@@ -1,7 +1,9 @@
 {
-  "main.css": "static/css/main.c3bd4d5a.css",
-  "main.css.map": "static/css/main.c3bd4d5a.css.map",
-  "main.js": "static/js/main.52c22cc0.js",
-  "main.js.map": "static/js/main.52c22cc0.js.map",
-  "static\\media\\logo.svg": "static/media/logo.8086066b.svg"
+  "main.css": "static/css/main.77ea7b18.css",
+  "main.css.map": "static/css/main.77ea7b18.css.map",
+  "main.js": "static/js/main.05098b2b.js",
+  "main.js.map": "static/js/main.05098b2b.js.map",
+  "static\\media\\alarm.ogg": "static/media/alarm.68438ec6.ogg",
+  "static\\media\\logo.svg": "static/media/logo.8086066b.svg",
+  "static\\media\\ticking.ogg": "static/media/ticking.9650aabd.ogg"
 }
