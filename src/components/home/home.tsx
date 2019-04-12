@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 import axios from "../../utils/Axios";
 // import "../static/bg.mp4"
 import "./index.scss";
+import './home.scss';
 import Todos from "../todos/Todos";
 import Time from "../time/Time";
 import { ownUser,signOut,TodoModel } from "../../utils/learnCloud"
@@ -22,7 +23,8 @@ interface mystate{
   Syncing: boolean,
   SyncError: boolean,
   SyncTodo:any,
-  SyncTomato: any
+  SyncTomato: any,
+  isPcOrMo:any
 }
 
 // const {
@@ -59,7 +61,8 @@ class Index extends React.Component<myprops,mystate> {
           Syncing: false,
           SyncError: false,
           SyncTodo: [],
-          SyncTomato: []
+          SyncTomato: [],
+          isPcOrMo: 'hover'
         } as mystate
     }
 
@@ -106,6 +109,7 @@ class Index extends React.Component<myprops,mystate> {
   }
 
   componentDidMount(){
+    this.isPcOrMo()
     this.goPAGE()
     // console.log(localStorage.getItem("x-token"))
     // const userInfo = localStorage.getItem('userInfo')
@@ -271,7 +275,7 @@ showSuccessSync = () => {
         SyncSuccess: false,
         Sync: false
       })
-    },2000 )
+    },3000 )
   })
   
 }
@@ -337,6 +341,24 @@ showSuccessSync = () => {
    
   }
 
+  isPcOrMo =() => {
+    if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+      console.log("手机")
+      this.setState({
+        isPcOrMo: 'focus'
+      },() => {
+        console.log(this.state.isPcOrMo)
+      })
+    } else {
+      this.setState({
+        isPcOrMo: 'hover'
+      },() => {
+        console.log(this.state.isPcOrMo)
+      })
+        console.log("电脑")
+    }
+  }
+
 
   render() {
     const SuccessSyncSvg = () => (
@@ -375,18 +397,18 @@ showSuccessSync = () => {
       <span>欢迎使用Hey番茄土豆</span>
       </div>
       <span>
-      <Tooltip placement="top" title="同步成功" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow>
+      <Tooltip overlayClassName={this.state.SyncSuccess? '' : 'synchide'} placement="top" title="同步成功" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow>
       <SuccessSyncIcon className={ this.state.SyncSuccess ? `SuccessSyncIcon` : 'SuccessSyncIcon synchide' } />
       </Tooltip>
-      <Tooltip placement="top" title="与服务器同步数据" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow>      
+      <Tooltip overlayClassName={this.state.Sync? "synchide" : ''} trigger={this.state.isPcOrMo} placement="top" title="与服务器同步数据"  defaultVisible={false} arrowPointAtCenter={true} getPopupContainer={() => { let sync:any = document.querySelector('.sync'); return sync }} autoAdjustOverflow >      
       <Icon onClick={ this.Sync } type="sync" className={ this.state.Sync ? `sync synchide` : `sync` } />
       </Tooltip>
-      <Tooltip placement="top" title="正在同步数据" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow>      
+      {/* <Tooltip placement="top" title="正在同步数据" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow>       */}
       <Icon type="sync" className={ this.state.Syncing ? `syncing` : `syncing synchide` } />
-      </Tooltip>
-      <Tooltip placement="top" title="同步失败" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow>
+      {/* </Tooltip> */}
+      {/* <Tooltip placement="top" title="同步失败" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow> */}
       <ErrorSyncIcon className={ this.state.SyncError ? `ErrorSyncIcon` : `ErrorSyncIcon synchide` } />
-      </Tooltip>
+      {/* </Tooltip> */}
               <Dropdown overlay={this.menu} trigger={['click']}>
                 <a className="ant-dropdown-link" href="javascript:;">
                 <p>{ this.state.username || "请登录" } </p>

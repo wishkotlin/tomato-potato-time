@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import "./TimeAction.scss"
 import { Popconfirm,message   } from "antd"
-import Url from "../static/ticking.ogg";
-import alarm from '../static/alarm.ogg'
+// import Url from "../static/ticking.ogg";
+// import alarm from '../static/alarm.ogg'
 interface mysatte{
     startTime:any,
     cutDownTime:any,
@@ -31,13 +31,13 @@ export class TimeAction extends Component<myprops,mysatte> {
             startTime:"",
             cutDownTime: this.props.cutDownTime,
             // audioUrl: 'https://dushu-1251966512.cos.ap-beijing.myqcloud.com/quick_ticking.ogg',
-            audioUrl: Url,
+            audioUrl: "https://static.pomotodo.com/app/sounds/ticking-eedbd7c3.ogg?v=3",
             play:false,
             sunding: false
         }
         this.tick = null
         this.newaudio = new Audio(this.state.audioUrl)
-        this.newaudio.muted = true
+        // this.newaudio.muted = true
         // this.newaudio.allow = "autoplay"//否则 会出现 play() failed because the user didn't interact with the document first
         // this.newaudio.autoplay = true
         this.newaudio.loop = true
@@ -116,7 +116,7 @@ export class TimeAction extends Component<myprops,mysatte> {
               })
               if(this.state.cutDownTime === 2000){
                 this.setState({
-                  audioUrl: alarm
+                  audioUrl: "https://static.pomotodo.com/app/sounds/alarm-ac90ae09.ogg?v=3"
                 },() => {
                   this.newaudio.pause()
                   this.newaudio = new Audio(this.state.audioUrl)
@@ -178,14 +178,22 @@ export class TimeAction extends Component<myprops,mysatte> {
     if(this.state.sunding === true){
       this.setState({
         sunding: false
+      },() => {
+        console.log(this.state.audioUrl)
       })
       this.newaudio.pause()
+      console.log(this.newaudio)
+      console.log('停止播放')
     }else{
-      this.newaudio.muted = false
-      this.newaudio.play()
       this.setState({
         sunding: true
+      },() => {
+        console.log(this.state.audioUrl)
       })
+      // this.newaudio.muted = false
+      this.newaudio.play()
+      console.log(this.newaudio)
+      console.log('开始播放')
     }
     
   }
