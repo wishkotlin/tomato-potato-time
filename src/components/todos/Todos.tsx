@@ -60,11 +60,13 @@ private checkbox: React.RefObject<any>
         // description: value,
         HasTodoList: true,
         Todolist: tempenter,
+        Complete: tempenter,
         description: ""
        },() => {
           this.todoinput.current.input.value = ""
           console.log(this.state.Todolist)
           localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
+          localStorage.setItem("Complete",JSON.stringify(this.state.Complete))
       });
         },(error:any) => {
           console.log(error);
@@ -87,6 +89,7 @@ private checkbox: React.RefObject<any>
     if(value !== ""){
       if(e.keyCode === 13){
             console.log(value)
+            this.todoinput.current.input.value = ""//防止 回车再次提交
             let newvalue:any = {
               value: value,
               checked: false,
@@ -107,13 +110,16 @@ private checkbox: React.RefObject<any>
             // description: value,
             HasTodoList: true,
             Todolist: tempenter,
+            Complete: tempenter,
             description: ""
            },() => {
-              this.todoinput.current.input.value = ""
+              
               console.log(this.state.Todolist)
               localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
-          });
+              localStorage.setItem("Complete",JSON.stringify(this.state.Complete))          
+            });
             },(error:any) => {
+              this.todoinput.current.input.value = value
               console.log(error);
             })
         this.todoinput.current.focus()
@@ -383,7 +389,7 @@ private checkbox: React.RefObject<any>
     // const CheckboxGroup = Checkbox.Group;
     const { description,Complete,Todolist } = this.state;
     // const plainOptions = Todolist;
-    const suffix = description ? <Icon type="enter" onClick={this.enter} /> : null;
+    const suffix = description ? <Icon type="enter" onClick={this.enter} /> : null;//input 回车图标
     const Todo = Todolist.filter( (item:any) => item.checked === false ).length === 0 ? (<div className="check-circle">
     <Icon type="check-circle" />
     <p>没有记录</p>
