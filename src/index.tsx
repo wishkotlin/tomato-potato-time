@@ -1,10 +1,11 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+// import * as ReactDOM from 'react-dom';
 import App from './App';
 import './index.scss';
 import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux'
 import store from "./redux/store"
+import { render } from 'react-snapshot';
 
 
 // const reducer = function (state:any,action:any){
@@ -22,13 +23,20 @@ import store from "./redux/store"
 
 // const store = createStore(reducer)
 
-const rootElement = document.getElementById('root') as HTMLElement
-ReactDOM.render(
+// const rootElement = document.getElementById('root') as HTMLElement
+// ReactDOM.render(
+//   <Provider store={store}>
+//     <App />
+//   </Provider>,
+//   rootElement
+// )
+
+render(
   <Provider store={store}>
-    <App />
+   <App />
   </Provider>,
-  rootElement
-)
+  document.getElementById('root')
+);
 
 
 // ReactDOM.render(
