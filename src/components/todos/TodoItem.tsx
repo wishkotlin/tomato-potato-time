@@ -5,7 +5,7 @@ import { Icon } from 'antd';
 import classNames from 'classnames';
 import './TodoItem.scss'
 // import axios from "../../config/axios";
-
+// import { TodoModel } from "../../utils/learnCloud"
 interface ITodoItemProps {
 	id: number;
 	description: string;
@@ -16,7 +16,10 @@ interface ITodoItemProps {
 	value: any,
 	Tkey:any,
 	edit:any,
-	editback:any
+	editback:any,
+	checked: boolean,
+	del: boolean,
+	editChange: (value:any) =>any;
 }
 
 interface ITodoItemState {
@@ -45,7 +48,7 @@ class TodoItem extends React.Component<ITodoItemProps,ITodoItemState> {
 		}
 	}
 
-	editTodo = () => {
+	editTodo = (e:any) => {
 		// this.props.editTodo(this.props.id)
 		console.log('双击了')
 		this.setState({
@@ -53,11 +56,45 @@ class TodoItem extends React.Component<ITodoItemProps,ITodoItemState> {
 		})
 		console.log("this.props.id",this.props.id)
 		this.props.edit(this.props.id)
+		// console.log(e.target)
+		let textarea = e.target.previousSibling.firstChild
+		console.log(textarea)
+		// let textarea:HTMLTextAreaElement | null = document.querySelector('#textarea');
+		if(textarea !== null){
+			console.log(e.target.clientHeight)
+			textarea.style.height = e.target.clientHeight + 'px';
+		}
+		
 	}
 
 	onKeyUp = (e:any)=>{
 		if(e.keyCode === 13 && this.state.editText !== ''){
-			this.updateTodo({description: this.state.editText})
+			// this.updateTodo({description: this.state.editText})
+			interface temp{
+				id:any,
+				value:any,
+				checked:any,
+				del: any,
+				editing?:any
+			}
+			let tempchange:temp = {
+				id: this.props.id,
+				value: this.state.editText,
+				checked: this.props.checked,
+				del: this.props.del
+			}
+			tempchange = {...tempchange,editing:false}
+			this.props.editChange(tempchange)
+			// TodoModel.update(
+			// 	tempchange,
+			// 	() => {//修改成功
+			// 	this.props.editChange(tempchange)
+			// 	},
+			// 	(error:any) => {//修改失败
+			// 	  console.log("修改错误",error);
+				 
+			// 	}
+			//   );
 		}
 	}
 	
@@ -65,41 +102,73 @@ class TodoItem extends React.Component<ITodoItemProps,ITodoItemState> {
 		this.props.editback()
 	}
 
+	Onchange = (e:any) => {
+		this.setState({editText: e.target.value.replace(/[\r\n]/g,"")})
+		// console.log(e.target)
+		// console.log(e)
+		this.makeExpandingArea(e.target)
+	}
+
+	makeExpandingArea = (el:any) => {
+		// console.log("执行了 textarea 重新设置高度")
+			var timer:any = null;
+		//由于ie8有溢出堆栈问题，故调整了这里
+		var setStyle = function(el:any, auto?:any) {
+			if (auto) el.style.height = 'auto';
+			el.style.height = el.scrollHeight + 'px';
+		}
+		var delayedResize = function(el:any) {
+			if (timer) {
+				clearTimeout(timer);
+				timer = null;
+			}
+			timer = setTimeout(function() {
+				setStyle(el)
+			}, 200);
+		}
+		if (el.addEventListener) {
+			el.addEventListener('input', function() {
+				// console.log('input')
+				// console.log(el.value)
+				if(el.value.endsWith("\n") === true){
+					// console.log("回车")
+					el.style.height = el.scrollHeight -21 + 'px';
+				}else{
+					// setStyle(el, 1);
+					// setStyle(el,1)
+					el.style.height = 'auto'
+					el.style.height = el.scrollHeight + 'px';
+					// console.log(el.scrollHeight)
+				}
+				
+			}, false);
+			
+		} else if (el.attachEvent) {
+			el.attachEvent('onpropertychange', function() {
+				// console.log("onpropertychange")
+				el.style.height = el.scrollHeight + 'px';
+			})
+			el.style.height = el.scrollHeight + 'px';
+		}
+		let win:any = window;
+		if (win.VBArray && window.addEventListener) { //IE9
+			el.attachEvent("onkeydown", function() {
+				var key = win.event.keyCode;
+				if (key == 8 || key == 46) delayedResize(el);
+				if(key == 13){
+					// console.log('按下了回车')
+				}
+			});
+			el.attachEvent("oncut", function() {
+				delayedResize(el);
+			}); //处理粘贴
+		}
+	}
+
 	componentDidMount(){
 		
-// 		var observe:any;  
- 
-
-//     observe = function (element:any, event:any, handler:any) {  
-//         element.addEventListener(event, handler, false);  
-//     };  
-// function init () {  
-// 	var text = document.querySelector('textarea');  
-// 	if(text !== null){
-// 		let  resize = () => {
-// 			if(text !== null){
-// 				text.style.height = 'auto';  
-// 				text.style.height = text.scrollHeight+'px'; 
-// 			} 
-// 		}  
-// 		/* 0-timeout to get the already changed text */  
-// 		let delayedResize = () => {  
-// 			window.setTimeout(resize, 0);  
-// 		}  
-// 		observe(text, 'change',  resize);  
-// 		observe(text, 'cut',     delayedResize);  
-// 		observe(text, 'paste',   delayedResize);  
-// 		observe(text, 'drop',    delayedResize);  
-// 		observe(text, 'keydown', delayedResize);  
-	   
-// 		text.focus();  
-// 		text.select();  
-// 		resize(); 
-// 	}
-     
-// }  
-
-// init ()
+		
+		
 
 	}
 
@@ -112,8 +181,8 @@ class TodoItem extends React.Component<ITodoItemProps,ITodoItemState> {
 		})
 		const Editing = (
 			<div className={Edting} style={{display: 'none'}}>
-				<textarea value={this.state.editText}
-				       onChange={e => this.setState({editText: e.target.value})}
+				<textarea rows={1} id="textarea" value={this.state.editText}
+				       onChange={this.Onchange}
 				       onKeyUp={this.onKeyUp}
 				/>
 				<div className="iconWrapper">

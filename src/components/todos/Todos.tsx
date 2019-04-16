@@ -385,6 +385,25 @@ private checkbox: React.RefObject<any>
       })
     }
 
+    editChange = (value:any) => {
+      console.log(value)
+      let {Todolist} = this.state;
+      let temp = Todolist.map( (t:any) => {
+        if(value.id === t.id){
+          return Object.assign({},value)
+        }else{
+          return Object.assign({},t,{editing: false})
+        }
+      } )
+      this.setState({
+        Todolist: temp,
+        Complete: temp
+      },() => {
+        console.log('editing',this.state.Todolist)
+      })
+
+    }
+
   render() {
     // const CheckboxGroup = Checkbox.Group;
     const { description,Complete,Todolist } = this.state;
@@ -396,13 +415,13 @@ private checkbox: React.RefObject<any>
   </div>) : ( this.state.Todolist.filter( (item:any) => item.checked === false ).map((item:any,key:any) => {
    return <span key={key}><Checkbox ref={this.checkbox}  checked={item.checked} onChange={(e) => {this.Change(e,key)}} />
    {/* { this.state.edit ? <textarea value={ item.value } /> : <span onDoubleClick={ () => this.setState({edit: true}) }>{ item.value }</span> } */}
-   <TodoItem editback={this.editback} edit={this.edit} {...item} />
+   <TodoItem editChange={this.editChange} editback={this.editback} edit={this.edit} {...item} />
    </span>
   }))
   const complate = Complete.filter( (item:any) => item.checked === true ).length === 0 ? null : ( this.state.Complete.filter( (item:any) => item.checked === true ).map((item:any,key:any) => {
     return <span key={key}><Checkbox checked={item.checked} onChange={(e) => {this.Changecom(e,key)}} />
     {/* <span>{ item.value }</span> */}
-    <TodoItem editback={this.editback} edit={this.edit} {...item} />
+    <TodoItem editChange={this.editChange} editback={this.editback} edit={this.edit} {...item} />
     </span>
    }))
    const Panel = Collapse.Panel;

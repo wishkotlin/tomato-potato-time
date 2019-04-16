@@ -4,6 +4,7 @@
     .text{
         display: block!important;
         padding-left: 8px;
+        word-break: break-word;
     }
     .editing{
         background: #fff3d2;
@@ -20,8 +21,37 @@
             outline: none;
             background: transparent;
             width: 80%;
-            resize: horizontal;
+            resize: none;
             height: 26px;
+            flex: 1;
+            overflow: hidden;
+            word-break: break-word;
         }
     }
 }
+#textarea{
+    border: 0;
+    padding: 0;
+    outline: none;
+    background: transparent;
+    width: 80%;
+    resize: none;
+    height: 26px;
+    flex: 1;
+    overflow: hidden;
+    word-break: break-word;
+}
+/*
+@media (min-width: 768px){
+    #TodoItem .editing textarea{
+        width: calc(26vw - 54px);
+    }
+    
+}
+@media (max-width: 768px){
+    #TodoItem .editing textarea{
+        width: calc(80vw - 54px);
+    }
+    
+}
+*/
