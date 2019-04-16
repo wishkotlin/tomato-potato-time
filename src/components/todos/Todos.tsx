@@ -153,7 +153,7 @@ private checkbox: React.RefObject<any>
     let check = this.checkbox.current
     console.log(check)
     console.log(key)
-    let tempchange = this.state.Todolist.filter( (item:any) => item.checked === false )
+    let tempchange = this.state.Todolist.filter( (item:any) => item.checked === false && item.del === false )
     let tempcom = this.state.Complete
     tempchange[key].checked = !tempchange[key].checked
     // tempcom.push(tempchange[key])//已完成数组添加到已完成
@@ -196,7 +196,7 @@ private checkbox: React.RefObject<any>
     );
     // filter( (item:any) => item.checked === true )//过滤 未选中
    
-    if( this.state.Todolist.filter( (item:any) => item.checked === false ).length === 0 ){
+    if( this.state.Todolist.filter( (item:any) => item.checked === false && item.del === false ).length === 0 ){
       this.setState( () => ({
         HasTodoList: false
       }) ,() => {
@@ -207,7 +207,7 @@ private checkbox: React.RefObject<any>
 
   Changecom = (e:any,key:any) => {
     console.log(key)
-    let tempchange = this.state.Complete.filter( (item:any) => item.checked === true )
+    let tempchange = this.state.Complete.filter( (item:any) => item.checked === true && item.del === false )
     let tempcom = this.state.Complete
     tempchange[key].checked = !tempchange[key].checked
     let id = tempchange[key].id//获取 id
@@ -248,7 +248,7 @@ private checkbox: React.RefObject<any>
     );
     
     // console.log(this.state.Todolist.length)
-    if( this.state.Todolist.filter( (item:any) => item.checked === true ).length !== 0 ){
+    if( this.state.Todolist.filter( (item:any) => item.checked === true && item.del === false ).length !== 0 ){
       this.setState( () => ({
         HasTodoList: true
       }) ,() => {
@@ -286,7 +286,7 @@ private checkbox: React.RefObject<any>
     if(tempTodolist !== null){
       tempTodolist = JSON.parse(tempTodolist)
       // console.log("非null tempTodolist",tempTodolist)
-      if(tempTodolist !== null && tempTodolist.filter( (item:any) => item.checked === false ).length === 0){
+      if(tempTodolist !== null && tempTodolist.filter( (item:any) => item.checked === false && item.del === false ).length === 0){
         this.setState( () => ({
           HasTodoList: false,
           Todolist: tempTodolist
@@ -399,7 +399,34 @@ private checkbox: React.RefObject<any>
         Todolist: temp,
         Complete: temp
       },() => {
+        localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
+        localStorage.setItem("Complete",JSON.stringify(this.state.Complete))
         console.log('editing',this.state.Todolist)
+      })
+
+    }
+
+    ItemDel = (value:any) => {
+      console.log(value)
+      let {Todolist} = this.state;
+      let temp = Todolist.map( (t:any) => {
+        if(value.id === t.id){
+          // console.log(t)
+          // t.del = true
+          // console.log(t)
+          return Object.assign({},value,{editing: false})
+        }else{
+          return Object.assign({},t,{editing: false})
+        }
+      } )
+
+      this.setState({
+        Todolist: temp,
+        Complete: temp
+      },() => {
+        localStorage.setItem("Todolist",JSON.stringify(this.state.Todolist))
+        localStorage.setItem("Complete",JSON.stringify(this.state.Complete))
+        console.log('删除',this.state.Todolist)
       })
 
     }
@@ -409,19 +436,19 @@ private checkbox: React.RefObject<any>
     const { description,Complete,Todolist } = this.state;
     // const plainOptions = Todolist;
     const suffix = description ? <Icon type="enter" onClick={this.enter} /> : null;//input 回车图标
-    const Todo = Todolist.filter( (item:any) => item.checked === false ).length === 0 ? (<div className="check-circle">
+    const Todo = Todolist.filter( (item:any) => item.checked === false && item.del === false ).length === 0 ? (<div className="check-circle">
     <Icon type="check-circle" />
     <p>没有记录</p>
-  </div>) : ( this.state.Todolist.filter( (item:any) => item.checked === false ).map((item:any,key:any) => {
+  </div>) : ( this.state.Todolist.filter( (item:any) => item.checked === false && item.del === false ).map((item:any,key:any) => {
    return <span key={key}><Checkbox ref={this.checkbox}  checked={item.checked} onChange={(e) => {this.Change(e,key)}} />
    {/* { this.state.edit ? <textarea value={ item.value } /> : <span onDoubleClick={ () => this.setState({edit: true}) }>{ item.value }</span> } */}
-   <TodoItem editChange={this.editChange} editback={this.editback} edit={this.edit} {...item} />
+   <TodoItem ItemDel={this.ItemDel} editChange={this.editChange} editback={this.editback} edit={this.edit} {...item} />
    </span>
   }))
-  const complate = Complete.filter( (item:any) => item.checked === true ).length === 0 ? null : ( this.state.Complete.filter( (item:any) => item.checked === true ).map((item:any,key:any) => {
+  const complate = Complete.filter( (item:any) => item.checked === true && item.del === false ).length === 0 ? null : ( this.state.Complete.filter( (item:any) => item.checked === true && item.del === false ).map((item:any,key:any) => {
     return <span key={key}><Checkbox checked={item.checked} onChange={(e) => {this.Changecom(e,key)}} />
     {/* <span>{ item.value }</span> */}
-    <TodoItem editChange={this.editChange} editback={this.editback} edit={this.edit} {...item} />
+    <TodoItem ItemDel={this.ItemDel} editChange={this.editChange} editback={this.editback} edit={this.edit} {...item} />
     </span>
    }))
    const Panel = Collapse.Panel;
@@ -456,7 +483,7 @@ private checkbox: React.RefObject<any>
         <div className="complate">
           {/* { this.state.Complete.length === 0 ? null : <Tooltip placement="top" title={"收起最近的完成的任务"}><Button></Button></Tooltip>} */}
           
-          { this.state.Complete.filter( (item:any) => item.checked === true ).length === 0 ? null : (<div><Tooltip placement="topRight" title="清理最近完成的任务列表" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow><CleanIcon className="CleanIcon" /></Tooltip>
+          { this.state.Complete.filter( (item:any) => item.checked === true && item.del === false ).length === 0 ? null : (<div><Tooltip placement="topRight" title="清理最近完成的任务列表" arrowPointAtCenter={true} getPopupContainer={() => document.body} autoAdjustOverflow><CleanIcon className="CleanIcon" /></Tooltip>
           <Collapse onChange={this.collapase} bordered={false} defaultActiveKey={this.state.activeKey} activeKey={this.state.activeKey}>
           <Panel className="" header="最近完成的任务" key="1">
           { complate }

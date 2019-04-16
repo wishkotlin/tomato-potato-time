@@ -5,7 +5,7 @@ import { Icon } from 'antd';
 import classNames from 'classnames';
 import './TodoItem.scss'
 // import axios from "../../config/axios";
-// import { TodoModel } from "../../utils/learnCloud"
+import { TodoModel } from "../../utils/learnCloud"
 interface ITodoItemProps {
 	id: number;
 	description: string;
@@ -19,7 +19,8 @@ interface ITodoItemProps {
 	editback:any,
 	checked: boolean,
 	del: boolean,
-	editChange: (value:any) =>any;
+	editChange: (value:any) =>any,
+	ItemDel: (value:any) => any;
 }
 
 interface ITodoItemState {
@@ -33,18 +34,6 @@ class TodoItem extends React.Component<ITodoItemProps,ITodoItemState> {
 		this.state = {
 			editText: this.props.value,
 			editing: this.props.editing
-		}
-	}
-
-	updateTodo = async (params:any) => {
-		if(params.completed){
-			params.completed_at = new Date()
-		}
-		try {
-			// const response = await axios.put(`todos/${this.props.id}`,params)
-			// this.props.updateTodo(response.data.resource)
-		}catch (e) {
-			throw new Error(e)
 		}
 	}
 
@@ -83,19 +72,47 @@ class TodoItem extends React.Component<ITodoItemProps,ITodoItemState> {
 				checked: this.props.checked,
 				del: this.props.del
 			}
-			tempchange = {...tempchange,editing:false}
-			this.props.editChange(tempchange)
-			// TodoModel.update(
-			// 	tempchange,
-			// 	() => {//修改成功
-			// 	this.props.editChange(tempchange)
-			// 	},
-			// 	(error:any) => {//修改失败
-			// 	  console.log("修改错误",error);
+			TodoModel.update(
+				tempchange,
+				() => {//修改成功
+				this.props.editChange(tempchange)
+				tempchange = {...tempchange,editing:false}
+				// this.props.editChange(tempchange)
+				},
+				(error:any) => {//修改失败
+				  console.log("修改错误",error);
 				 
-			// 	}
-			//   );
+				}
+			  );
 		}
+	}
+
+	enter = () => {
+		interface temp{
+			id:any,
+			value:any,
+			checked:any,
+			del: any,
+			editing?:any
+		}
+		let tempchange:temp = {
+			id: this.props.id,
+			value: this.state.editText,
+			checked: this.props.checked,
+			del: this.props.del
+		}
+		TodoModel.update(
+			tempchange,
+			() => {//修改成功
+			this.props.editChange(tempchange)
+			tempchange = {...tempchange,editing:false}
+			// this.props.editChange(tempchange)
+			},
+			(error:any) => {//修改失败
+			  console.log("修改错误",error);
+			 
+			}
+		  );
 	}
 	
 	back = () => {
@@ -172,6 +189,45 @@ class TodoItem extends React.Component<ITodoItemProps,ITodoItemState> {
 
 	}
 
+	updateTodo = async (params:any) => {
+		// if(params.completed){
+		// 	params.completed_at = new Date()
+		// }
+		console.log('删除',this.props.id,this.props.del)
+		// this.props.ItemDel(this.props.id)
+		interface temp{
+			id:any,
+			value:any,
+			checked:any,
+			del: any,
+			editing?:any
+		}
+		let tempchange:temp = {
+			id: this.props.id,
+			value: this.state.editText,
+			checked: this.props.checked,
+			del: true
+		}
+		TodoModel.update(
+			tempchange,
+			() => {//修改成功
+			this.props.ItemDel(tempchange)
+			// tempchange = {...tempchange,editing:false}
+			// this.props.editChange(tempchange)
+			},
+			(error:any) => {//修改失败
+			  console.log("修改错误",error);
+			 
+			}
+		  );
+		// try {
+		// 	// const response = await axios.put(`todos/${this.props.id}`,params)
+		// 	// this.props.updateTodo(response.data.resource)
+		// }catch (e) {
+		// 	throw new Error(e)
+		// }
+	}
+
 	public render() {
 		const Edting = classNames({
 			editing: this.props.editing
@@ -187,7 +243,7 @@ class TodoItem extends React.Component<ITodoItemProps,ITodoItemState> {
 				/>
 				<div className="iconWrapper">
 					<Icon type="rollback" onClick={ this.back } />
-					<Icon type="enter" />
+					<Icon type="enter" onClick={this.enter} />
 					<Icon type="delete" theme="filled"
 					      onClick={e => this.updateTodo({deleted: true})}/>
 				</div>
