@@ -1,6 +1,6 @@
 # Hey番茄土豆
 
-[Hey番茄土豆](https://liulinboyi8023.gitee.io/tomato-potato-time)
+[Hey番茄土豆](https://blog.heyliubo.top/tomato-potato-time)
 
 已完成：
 
