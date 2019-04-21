@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import "./TimeAction.scss"
 import { Popconfirm,message   } from "antd"
+import TomatoPng from '../static/Tomato.png'
 // import Url from "../static/ticking.ogg";
 // import alarm from '../static/alarm.ogg'
 interface mysatte{
@@ -114,7 +115,7 @@ export class TimeAction extends Component<myprops,mysatte> {
                 // this.newaudio.play()
                 
               })
-              if(this.state.cutDownTime === 2000){
+              if(this.state.cutDownTime === 4000){
                 this.setState({
                   audioUrl: "https://static.pomotodo.com/app/sounds/alarm-ac90ae09.ogg?v=3"
                 },() => {
@@ -156,18 +157,29 @@ export class TimeAction extends Component<myprops,mysatte> {
           let link:any = document.querySelector("link[rel*='icon']") || document.createElement('link');
             link.type = 'image/x-icon';
             link.rel = 'shortcut icon';
-            link.href = '/Tomato-potato-time/Tomato.png';
+            link.href = TomatoPng;
             document.getElementsByTagName('head')[0].appendChild(link);
             //关闭 滴答
             this.newaudio.pause()
         }
 
    componentWillUnmount(){
-      if(this.state.cutDownTime < 1000){
-        // localStorage.removeItem("Time")
-        console.log("componentWillUnmount 定时器已经销毁")
-        clearInterval(this.tick)
-      }
+    this.newaudio.pause()
+    console.log("componentWillUnmount 定时器已经销毁")
+    clearInterval(this.tick)
+    /*
+    卸载组件 回复 icon
+    * */
+   let link:any = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.type = 'image/x-icon';
+            link.rel = 'shortcut icon';
+            link.href = TomatoPng;
+            document.getElementsByTagName('head')[0].appendChild(link);
+
+  /*
+  卸载组件 时恢复 title 
+  * */
+ document.title = `Hey番茄土豆`;
   }
 
 

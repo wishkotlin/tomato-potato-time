@@ -154,7 +154,7 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            width: 8em;
+            max-width: 8em;
         }
     }
     &>p:nth-child(1){
